@@ -1,0 +1,18 @@
+# POP Flow suite meta-repo: tracks only the suite-level docs + installer.
+# Each COSMIC component is its OWN git repo/fork — not part of this repo.
+cosmic-launcher/
+cosmic-files/
+cosmic-comp/
+cosmic-workspaces-epoch/
+
+# Local prebuilt binaries / backups kept in the workspace
+cosmic-launcher-baseline-*
+cosmic-launcher-system-backup
+
+# Local, machine-specific Claude Code config (statusline, absolute paths)
+.claude/
+
+# OS / editor cruft
+*.swp
+*~
+.DS_Store
