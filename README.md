@@ -20,8 +20,8 @@ para o dia a dia — sem abandonar a estética e a base do COSMIC.
 |---|---|---|---|
 | **Launcher** (`cosmic-launcher/`) | [`NicoArgo/POP-Flow`](https://github.com/NicoArgo/POP-Flow) | Alt+Tab com grade de miniaturas ao vivo, fechar janela, menu de contexto rico | 🟢 ativo, instalado |
 | **Files** (`cosmic-files/`) | `NicoArgo/cosmic-files` (fork) | Gerenciador de arquivos — preview ampliado no hover (F1) | 🟢 F1 implementada |
-| `cosmic-comp/` | pop-os/cosmic-comp (referência) | Compositor — referência de protocolos wayland | ⚪ referência |
-| `cosmic-workspaces-epoch/` | pop-os/... (referência) | Overview de workspaces — referência de screencopy/toplevel | ⚪ referência |
+| **Overview** (`cosmic-workspaces-epoch/`) | `NicoArgo/cosmic-workspaces-epoch` (fork) | Tela do Super (Task-View) — portar X de fechar / grade / preview | 🟡 iniciando |
+| **Compositor** (`cosmic-comp/`) | `NicoArgo/cosmic-comp` (fork) | Snap/tiling de janelas estilo Windows (Aero-snap) | 🟡 iniciando (⚠ é o compositor) |
 
 Veja o estado detalhado e o que vem a seguir em **[ROADMAP.md](ROADMAP.md)**.
 

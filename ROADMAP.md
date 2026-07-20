@@ -67,11 +67,33 @@ que o `cosmic-files` já usa no menu da área principal.
 
 ---
 
+## Overview do Super — `cosmic-workspaces-epoch/` (`NicoArgo/cosmic-workspaces-epoch`)
+
+A tela de Task-View (tecla Super). Fork criado 2026-07-20.
+
+### 🚧 Em andamento — portar melhorias do launcher
+- **Botão X de fechar** por miniatura de janela (reusa o padrão do launcher).
+- Depois: grade adaptativa / preview no hover, conforme fizer sentido aqui.
+_Explorando onde as miniaturas de janela e o fechamento (toplevel-management)
+são feitos._
+
+---
+
+## Compositor — `cosmic-comp/` (`NicoArgo/cosmic-comp`)
+
+⚠ **É o compositor** — mudanças aqui, se quebrarem, derrubam a sessão; testar
+exige reiniciar o compositor/sessão. Mudanças cirúrgicas e muito cuidado.
+
+### 🚧 Em andamento — **snap de bordas (Aero-snap)**
+Arrastar a janela para uma borda/canto da tela → encaixar em metade/quarto/
+maximizar. _Explorando onde o move-grab e a geometria de janela vivem, e o
+risco/forma de testar._
+
+---
+
 ## Referências (não modificadas)
 
-- `cosmic-comp/` — compositor; referência de protocolos wayland.
-- `cosmic-workspaces-epoch/` — overview de workspaces; referência canônica de
-  screencopy / toplevel-info.
+- (nenhuma no momento — os clones de referência viraram componentes ativos.)
 
 ---
 
