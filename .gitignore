@@ -4,6 +4,9 @@ cosmic-launcher/
 cosmic-files/
 cosmic-comp/
 cosmic-workspaces-epoch/
+cosmic-applets/
+# Any other cosmic-* component that gets forked into the workspace
+cosmic-*/
 
 # Local prebuilt binaries / backups kept in the workspace
 cosmic-launcher-baseline-*
