@@ -102,20 +102,25 @@ risco/forma de testar._
 Os applets do painel. Fork criado 2026-07-20. Alvo: o applet **app-list** (a dock
 de apps).
 
-### ✅ Feito — **preview de janela no hover** (v1)
-Passar o mouse no ícone de um app rodando na barra → miniatura ao vivo da(s)
-janela(s), estilo Windows. Reusa o screencopy + o popup de miniaturas que o
-applet já tinha (antes só no clique); adiciona `on_enter`/`on_exit` no ícone com
-debounce de 350ms, helper `open_windows_popup` compartilhado, e estado
-`hover_pending`/`hover_popup`. Commit `06708fd7` + `052887e1` (install standalone,
-sem depender de `libudev`). **v1 é preview-only** (sai do ícone → fecha; para
-interagir com uma janela, clica). Instala só o binário standalone `cosmic-app-list`
-por cima do symlink; reinicia o `cosmic-panel`.
+### ✅ Feito — **preview de janela no hover** (popup interativo)
+Passar o mouse (debounce 350ms) no ícone de um app rodando → abre o **popup
+interativo** de miniaturas (o mesmo do clique, que reusa screencopy + toplevel
+tracking). Dá pra clicar numa miniatura pra ativar/fechar a janela; fecha ao
+clicar fora. Adiciona `on_enter`/`on_exit` no ícone + helper `open_windows_popup`
+compartilhado. Instala só o binário standalone `cosmic-app-list` por cima do
+symlink (sem `libudev`), reinicia o `cosmic-panel`. Commits `06708fd7` →
+`ffb217e8`.
 
-### 📋 Planejado
-- "Hover bridge" para preview **interativo** (mover o mouse até a miniatura e
-  clicar nela) — v2.
-- Opcional: re-capturar periodicamente pra miniatura ficar "ao vivo" de verdade.
+**Limitação conhecida:** o popup faz *grab* (necessário pra ser clicável), então
+**não troca** ao passar para outro app — pra ver outro, clica fora e faz hover.
+Tentativas de popup transparente (grab off + input_zone vazio) quebraram os
+cliques e o reconhecimento do mouse no COSMIC — ver histórico. Um preview que
+troca ao vivo E é clicável exigiria mudança no **compositor** (quem roteia o
+input do popup); fica como ideia futura.
+
+### 💡 Ideias
+- Preview com *live-switch* + clicável (provavelmente via `cosmic-comp`).
+- Re-capturar periodicamente pra miniatura ficar "ao vivo" de verdade.
 
 ---
 
