@@ -48,17 +48,23 @@ Gerenciador de arquivos do COSMIC. Fork recém-criado, pronto para trabalho.
 Ao passar o mouse sobre o ícone de um arquivo, um tooltip mostra uma versão
 ampliada (~240px) da miniatura — só para imagens/SVGs, reusando o handle já em
 cache (sem regenerar). Via `Item::hover_peek()` + `Item::peek_wrap()` na
-`grid_view` (Position::Top) e nas 3 variantes da `list_view` (Position::Right) —
-lista é a view padrão. Commits `51ba475` (grade) + `fd2de78` (lista).
+`grid_view` e nas 3 variantes da `list_view`, com `Position::FollowCursor` (o
+preview segue o cursor). Commits `51ba475` (grade) + `fd2de78` (lista) +
+`d19a5f5` (segue o cursor).
 
 ### ✅ Feito — **Barra lateral: "Abrir no terminal"**
 O menu de botão-direito da barra lateral (locais/pastas) ganhou **"Abrir no
 terminal"** para locais que são pasta, abrindo o terminal padrão naquela pasta.
 Reusa a detecção de terminal (`mime_app_cache.terminal()`) e o `spawn_detached`
-que o `cosmic-files` já usa no menu da área principal.
+que o `cosmic-files` já usa no menu da área principal. Commit `59f37b8`.
+
+### ✅ Feito — **Miniatura no modal de renomear**
+Ao renomear uma **imagem**, o modal mostra um preview dela (~288px, um pouco
+maior que o do hover) acima do campo de nome. Só para arquivos de imagem.
+Commit `8eeeeed`.
 
 ### 📋 Planejado / a validar
-- Validar peek e "abrir no terminal" em uso real; ajustar tamanho/posição do peek.
+- Validar em uso real; ajustar tamanhos/posições conforme feedback.
 
 ### 💡 Ideias
 - Flag em `TabConfig` (`peek_on_hover` / tamanho) para ligar/desligar/ajustar.
@@ -88,6 +94,19 @@ exige reiniciar o compositor/sessão. Mudanças cirúrgicas e muito cuidado.
 Arrastar a janela para uma borda/canto da tela → encaixar em metade/quarto/
 maximizar. _Explorando onde o move-grab e a geometria de janela vivem, e o
 risco/forma de testar._
+
+---
+
+## Barra de tarefas — `cosmic-applets/` (`NicoArgo/cosmic-applets`)
+
+Os applets do painel. Fork criado 2026-07-20. Alvo: o applet **app-list** (a dock
+de apps).
+
+### 🚧 Em andamento — **preview de janela no hover**
+Passar o mouse no ícone de um app rodando na barra → miniatura ao vivo da(s)
+janela(s), estilo Windows. _Explorando a viabilidade: se o applet consegue
+capturar a miniatura (screencopy) no contexto dele, e onde plugar o popup de
+hover. É o item mais complexo — a implementação depende dessa avaliação._
 
 ---
 

@@ -22,6 +22,7 @@ para o dia a dia — sem abandonar a estética e a base do COSMIC.
 | **Files** (`cosmic-files/`) | `NicoArgo/cosmic-files` (fork) | Gerenciador de arquivos — preview ampliado no hover (F1) | 🟢 F1 implementada |
 | **Overview** (`cosmic-workspaces-epoch/`) | `NicoArgo/cosmic-workspaces-epoch` (fork) | Tela do Super (Task-View) — portar X de fechar / grade / preview | 🟡 iniciando |
 | **Compositor** (`cosmic-comp/`) | `NicoArgo/cosmic-comp` (fork) | Snap/tiling de janelas estilo Windows (Aero-snap) | 🟡 iniciando (⚠ é o compositor) |
+| **Barra de tarefas** (`cosmic-applets/`) | `NicoArgo/cosmic-applets` (fork) | Preview de janela ao passar o mouse no ícone da dock | 🟡 explorando viabilidade |
 
 Veja o estado detalhado e o que vem a seguir em **[ROADMAP.md](ROADMAP.md)**.
 
