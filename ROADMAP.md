@@ -102,11 +102,20 @@ risco/forma de testar._
 Os applets do painel. Fork criado 2026-07-20. Alvo: o applet **app-list** (a dock
 de apps).
 
-### 🚧 Em andamento — **preview de janela no hover**
+### ✅ Feito — **preview de janela no hover** (v1)
 Passar o mouse no ícone de um app rodando na barra → miniatura ao vivo da(s)
-janela(s), estilo Windows. _Explorando a viabilidade: se o applet consegue
-capturar a miniatura (screencopy) no contexto dele, e onde plugar o popup de
-hover. É o item mais complexo — a implementação depende dessa avaliação._
+janela(s), estilo Windows. Reusa o screencopy + o popup de miniaturas que o
+applet já tinha (antes só no clique); adiciona `on_enter`/`on_exit` no ícone com
+debounce de 350ms, helper `open_windows_popup` compartilhado, e estado
+`hover_pending`/`hover_popup`. Commit `06708fd7` + `052887e1` (install standalone,
+sem depender de `libudev`). **v1 é preview-only** (sai do ícone → fecha; para
+interagir com uma janela, clica). Instala só o binário standalone `cosmic-app-list`
+por cima do symlink; reinicia o `cosmic-panel`.
+
+### 📋 Planejado
+- "Hover bridge" para preview **interativo** (mover o mouse até a miniatura e
+  clicar nela) — v2.
+- Opcional: re-capturar periodicamente pra miniatura ficar "ao vivo" de verdade.
 
 ---
 

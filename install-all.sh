@@ -8,7 +8,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 # Components that ship an install.sh (modifiable forks), in install order.
-COMPONENTS=(cosmic-launcher cosmic-files)
+COMPONENTS=(cosmic-launcher cosmic-files cosmic-applets)
 
 echo "==> POP Flow — installing: ${COMPONENTS[*]}"
 
