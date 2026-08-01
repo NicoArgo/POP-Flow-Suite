@@ -85,9 +85,22 @@ desligado — o chevron sempre funciona) e *Manter pastas expandidas* (padrão
 ligado — voltar para a pasta reabre o que estava aberto). 6 testes novos cobrem
 expansão, recolhimento, ordenação, grid e persistência.
 
+### ✅ Feito — **Árvore também na barra lateral**
+As pastas favoritas da barra lateral abrem **inline**, indentadas, mostrando suas
+subpastas (só pastas — a barra lateral é uma lista de lugares, não de arquivos).
+Usa a **indentação nativa do `nav_bar`** do libcosmic, que já desenha as linhas-
+guia; o `segmented_button` não tem chevron, então o gesto é o clique: clicar numa
+pasta em que você **não está** navega e abre; clicar na pasta em que você **já
+está** fecha — assim voltar para a raiz nunca destrói a árvore aberta. As
+subpastas são listadas fora da thread de UI (`Message::NavExpanded`) e ficam em
+cache; `App.nav_expanded` sobrevive às reconstruções do modelo. Liga/desliga em
+**Exibir → Expandir pastas na barra lateral**.
+
 ### 📋 Planejado / a validar
 - Validar em uso real; ajustar tamanhos/posições conforme feedback.
 - Árvore: testar com pasta muito grande (o `column_sort` roda por frame).
+- Barra lateral: sem chevron (limitação do `segmented_button`). Um chevron
+  exigiria forkar o libcosmic — decidir se vale.
 
 ### 💡 Ideias
 - Flag em `TabConfig` (`peek_on_hover` / tamanho) para ligar/desligar/ajustar.
