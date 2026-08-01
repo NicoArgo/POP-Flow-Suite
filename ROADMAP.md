@@ -63,13 +63,37 @@ Ao renomear uma **imagem**, o modal mostra um preview dela (~288px, um pouco
 maior que o do hover) acima do campo de nome. Só para arquivos de imagem.
 Commit `8eeeeed`.
 
+### ✅ Feito — **Dropdown de pastas (árvore) na lista**
+Cada pasta na visão em lista ganhou um **chevron ▸/▾**: clicar abre o conteúdo
+**inline**, sem trocar de janela, com scroll contínuo. Várias pastas e subpastas
+podem ficar abertas ao mesmo tempo. Setas **←/→** recolhem/expandem a pasta em
+foco (não faziam nada de útil na lista, que tem uma coluna só).
+
+Arquitetura: `items_opt` continua um `Vec<Item>` **plano** — assim clique,
+seleção, laço, DnD, virtualização e miniaturas seguem funcionando sem mudança.
+Cada `Item` ganhou `depth` + `tree_parent` (caminho, não índice, porque índices
+se deslocam). A hierarquia é montada no `column_sort()`, que agrupa por
+`tree_parent` e emite em DFS — então **a ordenação passa a valer dentro de cada
+pasta** em vez de espalhar os filhos. Expandir só faz `push` no fim do vetor,
+nunca desloca índices já capturados por mensagens de clique pendentes.
+`Tab::expanded` (conjunto de caminhos absolutos) é a intenção do usuário e
+sobrevive aos rescans; o `update_watcher` passou a observar também as pastas
+abertas (o watch não é recursivo). Grid/busca/lixeira/recentes ficam de fora.
+
+Duas opções no menu **Exibir**: *Clique esquerdo expande pastas* (padrão
+desligado — o chevron sempre funciona) e *Manter pastas expandidas* (padrão
+ligado — voltar para a pasta reabre o que estava aberto). 6 testes novos cobrem
+expansão, recolhimento, ordenação, grid e persistência.
+
 ### 📋 Planejado / a validar
 - Validar em uso real; ajustar tamanhos/posições conforme feedback.
+- Árvore: testar com pasta muito grande (o `column_sort` roda por frame).
 
 ### 💡 Ideias
 - Flag em `TabConfig` (`peek_on_hover` / tamanho) para ligar/desligar/ajustar.
 - Miniaturas maiores/ajustáveis; melhor densidade de grade.
 - Mais itens na sidebar (copiar caminho, abrir em nova janela para arquivos…).
+- Árvore: "recolher tudo", animação de abertura, persistir entre sessões.
 
 ---
 
