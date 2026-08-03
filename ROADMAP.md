@@ -184,8 +184,16 @@ migração e versões antigas simplesmente a ignoram.
 O plano completo (vistoria do código, fases, riscos) está em
 [PLAN-term-cores-por-diretorio.md](PLAN-term-cores-por-diretorio.md).
 
-_Estado: F0 (fork + docs) feito. Próximo: F1 — modelo de dados e a resolução
-`cwd → regra` como funções livres com testes, sem UI ainda._
+_Estado: **F0** (fork + docs), **F1** (modelo `DirRule` + resolução `cwd → regra`,
+`8b3fb87`) e **F2** (aplicar a aparência por terminal, `f5672ae`) feitos.
+30 testes passando. Próximo: **F3** — reagir ao `cd`._
+
+**Decisão tomada no F2 (o ponto que o plano deixou em aberto):** com o blur do
+COSMIC ligado, o tema substitui o alfa do painel — a transparência fixada numa
+pasta não apareceria. Uma regra é uma escolha explícita sobre aquela pasta, então
+ela **vence mesmo sob blur**; sem regra, o comportamento é idêntico ao de antes.
+Isso está isolado em `terminal_opacity()`, com testes. **Falta validar a olho**
+quando instalar.
 
 ### 📋 Planejado
 - Instalar exige `apt upgrade cosmic-term` antes (sistema em 1.0.7, upstream em
