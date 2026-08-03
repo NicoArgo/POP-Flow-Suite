@@ -84,8 +84,9 @@ Achados no código (`src/config.rs`, `src/main.rs`, `src/terminal.rs`):
 
 ## 2. Decisões de projeto
 
-> **Travadas em 2026-08-03:** regras por diretório (§2.1) · herança de subpastas
-> com match mais longo (§2.2) · aplica ao abrir **e** ao vivo no `cd` (§2.3) ·
+> **Travadas em 2026-08-03:** regras por diretório (§2.1) · **uma regra = uma
+> pasta**, sem herança; árvore é opt-in (§2.2, revisto no uso) · aplica ao abrir
+> **e** ao vivo no `cd` (§2.3) ·
 > escopo = **cor + transparência + título da aba/cursor**; fonte e tamanho
 > **ficam de fora** (§2.5).
 
@@ -94,7 +95,7 @@ Achados no código (`src/config.rs`, `src/main.rs`, `src/terminal.rs`):
 Uma lista nova de **regras**, independente dos perfis:
 
 ```
-regra = { caminho, inclui_subpastas, ativa, cores_dark, cores_light, opacidade, … }
+regra = { caminho, cobre_arvore (opt-in), ativa, cores_dark, cores_light, opacidade, … }
 ```
 
 Por quê não reaproveitar `Profile`: perfil carrega comando, título e diretório de
@@ -113,12 +114,25 @@ pasta. Problema: qualquer repositório clonado passa a mudar a aparência do seu
 terminal — é só cosmético, mas é entrada não confiável, e exigiria allowlist ou
 confirmação. Fica como ideia futura, não como base.
 
-### 2.2 Herança de subpastas — **decidido: sim, com match mais longo vence**
+### 2.2 Herança de subpastas — **revisto: uma regra = uma pasta**
 
-Regra em `~/projetos` pinta `~/projetos/foo/bar` também, a menos que exista
-regra mais específica. Comparação **por componente de caminho** (`/home/nico/ab`
-não casa com a regra `/home/nico/a`). Cada regra tem um botão para desligar a
-herança (só o caminho exato).
+> Esta seção mudou depois do F6, no uso real. A decisão original era herdar por
+> padrão; ficou registrado o porquê da troca.
+
+**Cada pasta tem a sua própria identidade e não a repassa.** Regra em
+`~/projetos` não diz nada sobre `~/projetos/foo`, que segue com a aparência
+global até ganhar regra própria. Cobrir uma árvore inteira continua possível,
+via `include_subdirs: true` na regra, mas é **opt-in**.
+
+A decisão anterior (herdar por padrão) partia de "ninguém quer marcar pasta por
+pasta". Mas herdar significa que pintar uma pasta repinta silenciosamente tudo
+que está embaixo dela — e o propósito da feature é justamente dar identidade a
+uma pasta específica.
+
+Comparação **por componente de caminho** (`/home/nico/ab` não casa com a regra
+`/home/nico/a`). Quando duas regras alcançam o mesmo diretório — só possível
+quando alguma optou por cobrir a árvore — vence a mais específica: a regra da
+própria pasta ganha da árvore que desce até ela.
 
 ### 2.3 Quando aplica — **decidido: ao abrir e ao vivo no `cd`**
 
@@ -181,7 +195,8 @@ que mantém as pastas independentes entre si e do global.
 Duas **funções livres testáveis** ([ARCHITECTURE §5](ARCHITECTURE.md)):
 
 - `resolve_dir_rule(&rules, cwd) -> Option<DirRuleId>` — ignora desativadas,
-  casa por componente, match exato ganha de prefixo, prefixo mais longo ganha.
+  casa por componente; normalmente é a regra do caminho exato, e entre regras
+  que cobrem árvore vence a mais específica.
 - `effective_appearance(&config, kind, profile_id, dir_rule_id) -> Appearance`
   — aplica a precedência da §2.1 e devolve
   `{ syntax_theme: String, opacity: u8, tab_title: Option<String>, cursor: Option<HexColor> }`.

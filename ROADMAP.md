@@ -175,7 +175,12 @@ aba e cor do cursor**. Aplica ao abrir o terminal **e ao vivo quando você dá
 Modelo: uma lista de **regras** (`dir_rules`) separada dos perfis — perfil diz
 _o que rodar_, regra diz _como aparecer_, e as duas coisas são ortogonais.
 Precedência **regra > perfil > global**, campo a campo (todo campo é `Option`,
-onde `None` = "herda"). Subpastas herdam, com o match mais longo vencendo.
+onde `None` = "herda").
+
+**Uma regra vale para uma pasta, não para a árvore dela.** Cada diretório tem a
+sua própria identidade e não a repassa: regra em `~/projetos` não diz nada sobre
+`~/projetos/foo`, que segue com a aparência global até ganhar regra própria.
+`include_subdirs: true` cobre a árvore, quando é isso que se quer.
 
 Persiste em `~/.config/cosmic/com.system76.CosmicTerm/v1/dir_rules` — o
 cosmic-config guarda **um arquivo por chave**, então a chave nova não exige
