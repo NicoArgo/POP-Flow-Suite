@@ -19,3 +19,6 @@ cosmic-launcher-system-backup
 *.swp
 *~
 .DS_Store
+
+# Scratch backups from an in-progress upstream merge — never part of the suite.
+.sync-wip/
