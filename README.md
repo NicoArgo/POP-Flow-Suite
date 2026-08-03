@@ -23,6 +23,7 @@ para o dia a dia — sem abandonar a estética e a base do COSMIC.
 | **Overview** (`cosmic-workspaces-epoch/`) | `NicoArgo/cosmic-workspaces-epoch` (fork) | Tela do Super (Task-View) — portar X de fechar / grade / preview | 🟡 iniciando |
 | **Compositor** (`cosmic-comp/`) | `NicoArgo/cosmic-comp` (fork) | Snap/tiling de janelas estilo Windows (Aero-snap) | 🟡 iniciando (⚠ é o compositor) |
 | **Barra de tarefas** (`cosmic-applets/`) | `NicoArgo/cosmic-applets` (fork) | Preview de janela ao passar o mouse no ícone da dock | 🟢 v1 implementada |
+| **Terminal** (`cosmic-term/`) | `NicoArgo/cosmic-term` (fork) | Aparência por diretório: cada pasta com suas cores, transparência, título e cursor | 🟡 iniciando |
 
 Veja o estado detalhado e o que vem a seguir em **[ROADMAP.md](ROADMAP.md)**.
 
@@ -53,6 +54,8 @@ Pop Flow/                      ← este workspace (o guarda-chuva da suíte)
 ├── .claude/                   ← config da sessão (statusline etc.)
 ├── cosmic-launcher/           ← fork: NicoArgo/POP-Flow  (o launcher)
 ├── cosmic-files/              ← fork: NicoArgo/cosmic-files
+├── cosmic-applets/            ← fork: NicoArgo/cosmic-applets
+├── cosmic-term/               ← fork: NicoArgo/cosmic-term
 ├── cosmic-comp/               ← clone de referência (upstream)
 └── cosmic-workspaces-epoch/   ← clone de referência (upstream)
 ```

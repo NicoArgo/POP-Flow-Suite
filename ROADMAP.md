@@ -161,6 +161,49 @@ input do popup); fica como ideia futura.
 
 ---
 
+## Terminal — `cosmic-term/` (`NicoArgo/cosmic-term`)
+
+O terminal do COSMIC. Fork criado **2026-08-03**, a partir do upstream 1.5.0
+(`7daf10e`); tag-âncora `pre-popflow` no ponto de partida.
+
+### 🚧 Em andamento — **T1: aparência por diretório**
+Cada pasta pode ter sua própria aparência, persistida de forma independente do
+ajuste global e das outras pastas: **esquema de cores, transparência, título da
+aba e cor do cursor**. Aplica ao abrir o terminal **e ao vivo quando você dá
+`cd`. Fonte e tamanho ficaram de fora da v1.
+
+Modelo: uma lista de **regras** (`dir_rules`) separada dos perfis — perfil diz
+_o que rodar_, regra diz _como aparecer_, e as duas coisas são ortogonais.
+Precedência **regra > perfil > global**, campo a campo (todo campo é `Option`,
+onde `None` = "herda"). Subpastas herdam, com o match mais longo vencendo.
+
+Persiste em `~/.config/cosmic/com.system76.CosmicTerm/v1/dir_rules` — o
+cosmic-config guarda **um arquivo por chave**, então a chave nova não exige
+migração e versões antigas simplesmente a ignoram.
+
+O plano completo (vistoria do código, fases, riscos) está em
+[PLAN-term-cores-por-diretorio.md](PLAN-term-cores-por-diretorio.md).
+
+_Estado: F0 (fork + docs) feito. Próximo: F1 — modelo de dados e a resolução
+`cwd → regra` como funções livres com testes, sem UI ainda._
+
+### 📋 Planejado
+- Instalar exige `apt upgrade cosmic-term` antes (sistema em 1.0.7, upstream em
+  1.5.0) — senão o backup `.orig` guarda um binário de uma epoch anterior.
+- ⚠ `cosmic-term` **não** é gerenciado pela sessão: dar `pkill` nele fecha os
+  terminais abertos do usuário. O `install.sh` deve só avisar, como o do Files.
+
+### 💡 Ideias
+- Fonte e tamanho por pasta (cortado da v1 — mexe em métricas e tamanho de
+  célula).
+- OSC 7 no lugar de ler `/proc` (pega `cd` dentro de subprocesso, mas exige
+  configurar o shell).
+- Regra por glob (`~/projetos/*/prod`) em vez de só prefixo.
+- Levar o conceito ao *Abrir no terminal* do `cosmic-files`, para a pasta já
+  abrir com a aparência dela.
+
+---
+
 ## Referências (não modificadas)
 
 - (nenhuma no momento — os clones de referência viraram componentes ativos.)
