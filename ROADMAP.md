@@ -49,19 +49,19 @@ Ao passar o mouse sobre o ícone de um arquivo, um tooltip mostra uma versão
 ampliada (~240px) da miniatura — só para imagens/SVGs, reusando o handle já em
 cache (sem regenerar). Via `Item::hover_peek()` + `Item::peek_wrap()` na
 `grid_view` e nas 3 variantes da `list_view`, com `Position::FollowCursor` (o
-preview segue o cursor). Commits `51ba475` (grade) + `fd2de78` (lista) +
-`d19a5f5` (segue o cursor).
+preview segue o cursor). Commits `51ba475` (grade) + `78411b5` (lista) +
+`4124ccb` (segue o cursor).
 
 ### ✅ Feito — **Barra lateral: "Abrir no terminal"**
 O menu de botão-direito da barra lateral (locais/pastas) ganhou **"Abrir no
 terminal"** para locais que são pasta, abrindo o terminal padrão naquela pasta.
 Reusa a detecção de terminal (`mime_app_cache.terminal()`) e o `spawn_detached`
-que o `cosmic-files` já usa no menu da área principal. Commit `59f37b8`.
+que o `cosmic-files` já usa no menu da área principal. Commit `f63865a`.
 
 ### ✅ Feito — **Miniatura no modal de renomear**
 Ao renomear uma **imagem**, o modal mostra um preview dela (~288px, um pouco
 maior que o do hover) acima do campo de nome. Só para arquivos de imagem.
-Commit `8eeeeed`.
+Commit `0639510`.
 
 ### ✅ Feito — **Dropdown de pastas (árvore) na lista**
 Cada pasta na visão em lista ganhou um **chevron ▸/▾**: clicar abre o conteúdo

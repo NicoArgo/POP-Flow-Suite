@@ -72,6 +72,11 @@ uma só senha de `sudo`. Rode em um terminal real:
 Ao final: o **launcher** (Alt+Tab) já fica ativo; o **gerenciador de arquivos** é
 reiniciado (isso fecha as janelas abertas dele — reabra depois).
 
+O script também instala, para cada componente, um hook de APT que **reaplica** a
+build do POP Flow depois de um update de pacote — sem isso, um `apt upgrade`
+restaura o binário de fábrica e a feature some sem avisar. Para desfazer só o
+hook de um componente: `cd <componente> && ./remove-auto-reapply.sh`.
+
 **Ou um componente por vez**, a partir da sua pasta:
 
 ```bash

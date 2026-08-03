@@ -73,8 +73,11 @@ contexto). Rode com `cargo test --bins`.
 
 ## 6. Modelo de instalação (reversível)
 
-Cada componente modificável traz `install.sh` / `uninstall.sh` no mesmo molde do
-launcher:
+Cada componente modificável traz `install.sh` / `uninstall.sh` /
+`setup-auto-reapply.sh` / `remove-auto-reapply.sh` no mesmo molde do launcher —
+os quatro, sem exceção. Um componente sem os dois últimos é revertido pelo
+próximo `apt upgrade` **sem aviso nenhum**, que é o pior modo de falha possível:
+a feature some e nada indica por quê.
 
 1. `cargo build --release`
 2. Backup do binário atual do sistema → `<componente>.orig` (uma vez)
@@ -86,8 +89,16 @@ Pontos-chave:
 
 - **Reinicia só aquele componente** — não fecha janelas de aplicativos.
 - **`sudo` exige terminal real** (o prefixo `!` da sessão não tem TTY).
-- **Auto-reapply:** a golden copy permite reaplicar POP Flow automaticamente
-  depois que um update de pacote do sistema sobrescreve o binário.
+- **Auto-reapply:** `setup-auto-reapply.sh` instala a golden copy mais um hook
+  `DPkg::Post-Invoke` que reaplica nossa build sempre que o binário do sistema
+  diverge dela. O script é o mesmo nos três componentes — só o bloco de
+  variáveis do topo (`COMP`/`BUILT`/`RELOAD`) muda. `install-all.sh` roda isso
+  para todo componente que instala.
+- **Alvos que são symlink** (ex.: `/usr/bin/cosmic-app-list` aponta para o
+  binário multiplexado `cosmic-applets`): `cmp` segue o link, então a restauração
+  do symlink pelo dpkg conta como divergência e dispara o reapply. E `install`
+  desvincula o destino antes de copiar, então trocar o symlink por um arquivo
+  **não** sobrescreve o binário multiplexado.
 - **Reversível:** `uninstall.sh` restaura o `.orig`. Um backup do binário
   original de fábrica é preservado no workspace — não apague sem confirmar.
 

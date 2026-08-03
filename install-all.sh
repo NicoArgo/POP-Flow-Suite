@@ -11,6 +11,8 @@ cd "$(dirname "$0")"
 COMPONENTS=(cosmic-launcher cosmic-files cosmic-applets)
 
 echo "==> POP Flow — installing: ${COMPONENTS[*]}"
+echo "    Each component also gets an APT post-invoke hook so a package update"
+echo "    can't silently revert it. Undo per component with remove-auto-reapply.sh"
 
 # Prompt for sudo once up front and keep the timestamp fresh for the whole run
 # (so long builds don't cause a second password prompt mid-way).
@@ -26,6 +28,13 @@ for comp in "${COMPONENTS[@]}"; do
         echo "==> $comp"
         echo "=================================================================="
         ( cd "$comp" && ./install.sh )
+        # Make it stick: without this, the next package update of the component
+        # restores the stock binary and the feature disappears with no warning.
+        if [ -x "$comp/setup-auto-reapply.sh" ]; then
+            ( cd "$comp" && ./setup-auto-reapply.sh )
+        else
+            echo "!! $comp has no setup-auto-reapply.sh — a package update will revert it"
+        fi
     else
         echo "!! skipping $comp (no executable install.sh)"
     fi
