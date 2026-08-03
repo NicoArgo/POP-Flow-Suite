@@ -185,8 +185,22 @@ O plano completo (vistoria do código, fases, riscos) está em
 [PLAN-term-cores-por-diretorio.md](PLAN-term-cores-por-diretorio.md).
 
 _Estado: **F0** (fork + docs), **F1** (modelo `DirRule` + resolução `cwd → regra`,
-`8b3fb87`) e **F2** (aplicar a aparência por terminal, `f5672ae`) feitos.
-30 testes passando. Próximo: **F3** — reagir ao `cd`._
+`8b3fb87`), **F2** (aplicar a aparência por terminal, `f5672ae`) e **F3** (reagir
+ao `cd`, `40a6a1b`) feitos. 32 testes passando. Próximo: **F4** — a interface._
+
+**A feature já funciona de ponta a ponta**, editando as regras à mão. Com um
+terminal aberto, escreva em
+`~/.config/cosmic/com.system76.CosmicTerm/v1/dir_rules`:
+
+```ron
+{
+    1: (path: "~/projetos", opacity: Some(85), syntax_theme_dark: Some("Dracula")),
+    2: (path: "~/projetos/prod", tab_title: Some("PROD"), cursor: Some("#ff0000")),
+}
+```
+
+O terminal reage na hora (o cosmic-config observa o arquivo) e ao `cd` entre as
+pastas. Só falta a UI para não precisar editar arquivo.
 
 **Decisão tomada no F2 (o ponto que o plano deixou em aberto):** com o blur do
 COSMIC ligado, o tema substitui o alfa do painel — a transparência fixada numa
