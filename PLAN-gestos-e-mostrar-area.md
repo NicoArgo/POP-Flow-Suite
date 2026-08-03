@@ -4,6 +4,10 @@ Dois pedidos relacionados: **gestos de touchpad no estilo macOS** (três dedos
 para o lado troca janela, etc.) e **clicar na barra de applets para minimizar
 tudo e ir para a área de trabalho**.
 
+> **Decisões travadas em 2026-08-03:** applet no painel (§3-A) · gesto de trocar
+> janela **discreto** (§2.2-a) · primeira leva com **os quatro** gestos: 3 dedos
+> ←→ trocar janela, 3 ↑ overview, 3 ↓ área de trabalho, pinch 4–5 App Library.
+
 ---
 
 ## 1. Vistoria
@@ -138,10 +142,9 @@ quando o **Alt é solto** (`Message::AltRelease`), e num gesto não há modifica
 nenhum. Precisaria de um "modo gesto" no launcher e de um canal do compositor
 para ele.
 
-**Recomendo (a) primeiro**, e (b) como fase separada, se o (a) provar que o
-gesto é confortável. Vale registrar que **só o POP Flow pode fazer o (b)** com
-essa qualidade, porque o launcher é nosso — num COSMIC de fábrica isso não
-existiria.
+**Escolhido: (a) discreto.** O (b) fica como fase opcional (G6), se o uso provar
+que vale. Vale registrar que **só o POP Flow pode fazer o (b)** com essa
+qualidade, porque o launcher é nosso — num COSMIC de fábrica isso não existiria.
 
 ---
 
@@ -154,7 +157,7 @@ todas — quem já estava minimizado deve continuar).
 Esse estado ("quais eu minimizei") precisa morar em algum processo vivo. É o que
 separa as opções.
 
-### Opção A — applet dedicado (recomendada)
+### Opção A — applet dedicado ✅ **escolhida**
 
 Um applet em `cosmic-applets` (**fork que já temos**): uma faixa fina e
 clicável, no canto do painel, no estilo do botão "Mostrar área de trabalho" do
@@ -184,14 +187,20 @@ Registrar como um comando e deixar o usuário amarrar numa tecla.
 - ✅ Custo quase zero, e é subproduto natural das opções A e B.
 - ➖ Não atende o pedido sozinho.
 
-**Recomendo A + C juntos**, e a B depois, se o applet não satisfizer. As três
-compartilham o mesmo núcleo, então nada é jogado fora ao trocar de opinião.
+**Escolhido: A**, com o C saindo de graça junto (o núcleo do G1 é o mesmo). A B
+fica como G7 opcional, se o applet não satisfizer — as três compartilham o mesmo
+núcleo, então nada é jogado fora ao trocar de opinião.
 
 ---
 
 ## 4. Plano de execução
 
-### G0 — Preparação (antes de qualquer código)
+> **O G1 e o G2 não dependem do G0.** O applet vive no `cosmic-applets` e fala
+> com o compositor por protocolo, não por código. Dá para entregar metade do
+> pedido — a área de trabalho — **sem tocar no compositor e sem risco de
+> sessão**. O G0 só é pré-requisito das fases de gesto (G3 em diante).
+
+### G0 — Preparação (antes de qualquer código **no compositor**)
 
 1. **Consertar o `cosmic-comp`**: está em **HEAD destacado**. Colocar num ramo
    antes de tudo, senão o trabalho fica pendurado no nada.
