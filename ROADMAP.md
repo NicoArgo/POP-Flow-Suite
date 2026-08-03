@@ -166,7 +166,7 @@ input do popup); fica como ideia futura.
 O terminal do COSMIC. Fork criado **2026-08-03**, a partir do upstream 1.5.0
 (`7daf10e`); tag-âncora `pre-popflow` no ponto de partida.
 
-### 🚧 Em andamento — **T1: aparência por diretório**
+### ✅ Feito — **T1: aparência por diretório**
 Cada pasta pode ter sua própria aparência, persistida de forma independente do
 ajuste global e das outras pastas: **esquema de cores, transparência, título da
 aba e cor do cursor**. Aplica ao abrir o terminal **e ao vivo quando você dá
@@ -189,29 +189,30 @@ migração e versões antigas simplesmente a ignoram.
 O plano completo (vistoria do código, fases, riscos) está em
 [PLAN-term-cores-por-diretorio.md](PLAN-term-cores-por-diretorio.md).
 
-_Estado: **F0** (fork + docs), **F1** (modelo `DirRule` + resolução `cwd → regra`,
-`8b3fb87`), **F2** (aplicar a aparência por terminal, `f5672ae`) e **F3** (reagir
-ao `cd`, `40a6a1b`) feitos. 32 testes passando. Próximo: **F4** — a interface._
+_Estado: **T1 completa.** F0 (fork + docs), F1 (modelo `DirRule` + resolução
+`cwd → regra`, `8b3fb87`), F2 (aparência por terminal, `f5672ae`), F3 (reagir ao
+`cd`, `40a6a1b`), F6 antecipado (scripts de instalação, `c6e6ce8`) e F4 (a UI,
+`70c00f8`). 38 testes passando. **Falta validar em uso real.**_
 
-**A feature já funciona de ponta a ponta**, editando as regras à mão. Com um
-terminal aberto, escreva em
-`~/.config/cosmic/com.system76.CosmicTerm/v1/dir_rules`:
+**Como usar:** botão direito no terminal → *Usar esta aparência aqui* fixa a
+aparência atual na pasta em que você está. Depois, **Arquivo → Regras por
+pasta...** para ajustar cores, transparência, título, cursor e se a regra cobre
+a árvore. Cada campo pode ficar em "herdar" — é isso que mantém as pastas
+independentes.
 
-```ron
-{
-    1: (path: "~/projetos", opacity: Some(85), syntax_theme_dark: Some("Dracula")),
-    2: (path: "~/projetos/prod", tab_title: Some("PROD"), cursor: Some("#ff0000")),
-}
-```
+Editar `~/.config/cosmic/com.system76.CosmicTerm/v1/dir_rules` à mão continua
+funcionando; o formato está no README do componente.
 
-O terminal reage na hora (o cosmic-config observa o arquivo) e ao `cd` entre as
-pastas. Só falta a UI para não precisar editar arquivo.
+### 📋 A validar em uso
+- A decisão do blur (regra vence o alfa do tema) — a única escolha que não deu
+  para conferir a olho.
+- Se "fixar a aparência atual" captura o que se espera (cores + transparência,
+  não título/cursor).
 
-**F6 antecipado** (`c6e6ce8`): os quatro scripts de instalação já existem, então
-dá para instalar e usar de verdade antes de construir a UI. O `install.sh` avisa
-se a versão do sistema não bate com a do fork — o backup que ele tira é o que o
-`uninstall.sh` restaura depois. Formato das regras documentado no README do
-componente.
+### 💡 Ideias
+- Atalho de teclado para *Usar esta aparência aqui*.
+- Seletor de cor visual no lugar do campo de hex do cursor.
+- Indicador na aba de que a pasta tem regra.
 
 **Decisão tomada no F2 (o ponto que o plano deixou em aberto):** com o blur do
 COSMIC ligado, o tema substitui o alfa do painel — a transparência fixada numa
