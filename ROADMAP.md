@@ -155,9 +155,36 @@ cliques e o reconhecimento do mouse no COSMIC — ver histórico. Um preview que
 troca ao vivo E é clicável exigiria mudança no **compositor** (quem roteia o
 input do popup); fica como ideia futura.
 
+### ✅ Feito — **G1+G2: applet "mostrar área de trabalho"** (`de49826a`)
+Um clique guarda todas as janelas do workspace atual; o próximo traz **de volta
+exatamente aquelas**. Applet novo (`cosmic-applet-show-desktop`), sem tocar no
+compositor nem no painel.
+
+A regra que sustenta tudo é *"restaure exatamente o que você guardou"*: janela
+que o usuário já tinha minimizado continua minimizada na volta, janela aberta
+durante a área de trabalho não é varrida pela volta, e janela restaurada à mão
+no meio do caminho fica onde ele deixou. Essa decisão vive em `show_desktop.rs`
+como dados entra / passos sai, com **9 testes** — nenhum precisa de compositor.
+
+Filtra pelo **workspace ativo**, o que não é cosmético: minimizar entre
+workspaces deixaria os outros vazios ao voltar. Sem workspace ativo reportado,
+cai para todas as janelas em vez de nenhuma.
+
+Instala em `/usr/local` (software novo, não substituição), então **não precisa
+de auto-reapply** — o dpkg não é dono do arquivo. **Não é adicionado ao painel
+automaticamente**: isso reescreveria a configuração do painel do usuário. Para
+usar: *Configurações → Área de trabalho → Painel → Configurar applets*.
+
+Plano completo em [PLAN-gestos-e-mostrar-area.md](PLAN-gestos-e-mostrar-area.md).
+
+### 📋 Planejado — gestos de touchpad (G3+)
+Depende de resolver o `cosmic-comp` antes (HEAD destacado + base de fevereiro).
+3 dedos ←→ trocar janela, ↑ overview, ↓ área de trabalho; pinch 4–5 App Library.
+
 ### 💡 Ideias
 - Preview com *live-switch* + clicável (provavelmente via `cosmic-comp`).
 - Re-capturar periodicamente pra miniatura ficar "ao vivo" de verdade.
+- Atalho de teclado para mostrar área de trabalho (sai de graça do G1).
 
 ---
 
