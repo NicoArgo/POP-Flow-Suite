@@ -23,7 +23,7 @@ para o dia a dia — sem abandonar a estética e a base do COSMIC.
 | **Overview** (`cosmic-workspaces-epoch/`) | `NicoArgo/cosmic-workspaces-epoch` (fork) | Tela do Super (Task-View) — portar X de fechar / grade / preview | 🟡 iniciando |
 | **Compositor** (`cosmic-comp/`) | `NicoArgo/cosmic-comp` (fork) | Snap/tiling de janelas estilo Windows (Aero-snap) | 🟡 iniciando (⚠ é o compositor) |
 | **Barra de tarefas** (`cosmic-applets/`) | `NicoArgo/cosmic-applets` (fork) | Preview de janela ao passar o mouse no ícone da dock | 🟢 v1 implementada |
-| **Terminal** (`cosmic-term/`) | `NicoArgo/cosmic-term` (fork) | Aparência por diretório: cada pasta com suas cores, transparência, título e cursor | 🟡 iniciando |
+| **Terminal** (`cosmic-term/`) | `NicoArgo/cosmic-term` (fork) | Aparência por diretório: cada pasta com suas cores, transparência, título e cursor | 🟢 funcionando (sem UI ainda) |
 
 Veja o estado detalhado e o que vem a seguir em **[ROADMAP.md](ROADMAP.md)**.
 

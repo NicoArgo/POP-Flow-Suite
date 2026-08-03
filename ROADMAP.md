@@ -202,6 +202,12 @@ terminal aberto, escreva em
 O terminal reage na hora (o cosmic-config observa o arquivo) e ao `cd` entre as
 pastas. Só falta a UI para não precisar editar arquivo.
 
+**F6 antecipado** (`c6e6ce8`): os quatro scripts de instalação já existem, então
+dá para instalar e usar de verdade antes de construir a UI. O `install.sh` avisa
+se a versão do sistema não bate com a do fork — o backup que ele tira é o que o
+`uninstall.sh` restaura depois. Formato das regras documentado no README do
+componente.
+
 **Decisão tomada no F2 (o ponto que o plano deixou em aberto):** com o blur do
 COSMIC ligado, o tema substitui o alfa do painel — a transparência fixada numa
 pasta não apareceria. Uma regra é uma escolha explícita sobre aquela pasta, então

@@ -8,7 +8,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 # Components that ship an install.sh (modifiable forks), in install order.
-COMPONENTS=(cosmic-launcher cosmic-files cosmic-applets)
+COMPONENTS=(cosmic-launcher cosmic-files cosmic-applets cosmic-term)
 
 echo "==> POP Flow — installing: ${COMPONENTS[*]}"
 echo "    Each component also gets an APT post-invoke hook so a package update"
@@ -45,6 +45,8 @@ done
 #    it; this does NOT close your app windows).
 #  - cosmic-files is NOT session-managed, so we stop it here to drop the old
 #    binary. THIS CLOSES ANY OPEN FILE-MANAGER WINDOWS — reopen it afterwards.
+#  - cosmic-term is deliberately NOT killed: this script is running inside one,
+#    and killing it would close the user's shells mid-install.
 echo
 echo "==> Reloading cosmic-files (this closes its open windows)..."
 pkill -x cosmic-files 2>/dev/null || true
@@ -52,3 +54,5 @@ pkill -x cosmic-files 2>/dev/null || true
 echo
 echo "==> POP Flow installed."
 echo "    Alt+Tab is live now. Reopen the file manager to use its new features."
+echo "    Open a NEW terminal window for the per-directory appearance — this one"
+echo "    is still running the old binary, and was left alone on purpose."
