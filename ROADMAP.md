@@ -20,7 +20,10 @@ Alt+Tab estilo Windows com grade de miniaturas ao vivo. Instalado e em uso.
   fecha a janela exata (nunca uma parecida).
 - **Atribuição 1:1** de miniaturas: janelas de mesmo título não compartilham a
   mesma imagem.
-- **Agrupamento por app** preservando ordem de uso recente (MRU).
+- **Posições fixas na grade**: cada janela mantém sempre a mesma célula — ativar
+  uma janela não a joga para a primeira posição. Janelas novas entram no fim,
+  fechadas somem; o Alt+Tab continua abrindo já com a janela anterior destacada.
+- **Agrupamento por app** sobre essa ordem fixa.
 - **Grade adaptativa sem scroll**: expande em colunas/linhas e **encolhe as
   miniaturas** para caber na tela, em vez de rolar.
 - **Menu de botão-direito enriquecido**: mescla ações do launcher — *Abrir no
@@ -229,6 +232,59 @@ independentes.
 
 Editar `~/.config/cosmic/com.system76.CosmicTerm/v1/dir_rules` à mão continua
 funcionando; o formato está no README do componente.
+
+### ✅ Feito — **T2: cor e nome de identidade por pasta**
+
+O T1 pinta o **conteúdo** do terminal. O T2 estende a mesma regra para tudo que
+identifica *qual terminal é este*: o acento da interface, uma faixa no topo da
+janela e a etiqueta da statusline do Claude Code.
+
+O problema que ele resolve: hoje "esta pasta é a POP Flow, e a cor dela é esse
+ciano" está escrito em **dois lugares independentes** — a regra do terminal e o
+`.claude/statusline.sh`, que tem a cor fixa no script com um comentário mandando
+trocar o RGB por projeto. Duas fontes de verdade para o mesmo fato.
+
+**Um campo novo resolve os dois lados:** `accent: Option<HexColor>` na `DirRule` —
+a cor daquela pasta, com um trabalho só. O `tab_title` que já existe passa a ser
+também *o nome da sessão*. Interface e statusline consomem os dois; um lugar para
+editar.
+
+Decisões tomadas antes de codar:
+
+- **Só o acento, não a janela inteira.** Header bar e menus mantêm o cinza do
+  sistema; a cor da regra pinta aba ativa, foco, hover e botões de ação. Derivar
+  fundos legíveis a partir de um hex qualquer é o tipo de coisa que quebra em
+  cores claras ou saturadas, e o ganho não paga o risco.
+- **A aba ativa manda.** Uma janela tem várias abas e um header só, então o
+  acento segue o foco — mesma lógica que já governa o título.
+- **O tema do usuário é preservado.** O acento é trocado sobre o `ThemeBuilder`
+  do próprio usuário (lido do cosmic-config), não sobre o padrão. Quem
+  customizou o tema não perde a customização ao usar uma regra.
+- **`{title}` no `tab_title`.** Hoje o título da regra sobrescreve de forma dura
+  o que o app emite — pôr um nome na pasta apagaria o título vivo do Claude
+  Code. Com o placeholder (`POP FLOW — {title}`) dá para ter os dois, e quem não
+  usa o placeholder mantém o comportamento de antes.
+
+Viável porque **janela nova é processo novo** no cosmic-term (`Message::WindowNew`
+dá `spawn` no próprio executável): o `set_theme` do libcosmic é por aplicação,
+mas com um processo por janela isso equivale a um tema por janela.
+
+A ponte com o Claude é `cosmic-term --resolve-rule <dir>`, que imprime
+`RULE_NAME` / `RULE_ACCENT` / `RULE_ACCENT_RGB` e sai antes de subir a GUI. O
+`statusline.sh` avalia a saída e cai nos valores fixos se o comando não existir —
+assim ele continua funcionando em outro terminal ou via SSH.
+
+**Uma armadilha que o `statusline.sh` teve que desarmar:** o cosmic-term de
+fábrica *ignora* flags que não conhece e segue para abrir uma janela. Chamar
+`--resolve-rule` num binário antigo abriria um terminal **a cada redesenho da
+statusline**. Por isso o script sonda o `--help` uma vez e guarda a resposta até
+o binário mudar — a sonda custa um spawn por instalação, não um por render.
+
+_Estado: **T2 completa.** `accent` + `{title}` no modelo, `--resolve-rule`, tema
+por aba ativa, faixa de identidade, campo na UI (pt-BR e en) e o `statusline.sh`
+ligado à regra. **48 testes passando** (eram 38). **Falta instalar e validar em
+uso** — em especial se a normalização de luminosidade do `with_accent` deixa a
+faixa (hex literal) visivelmente diferente do acento da interface._
 
 ### 📋 A validar em uso
 - A decisão do blur (regra vence o alfa do tema) — a única escolha que não deu
