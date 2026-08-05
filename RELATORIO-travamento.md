@@ -463,16 +463,54 @@ milhares):
 ls -l /proc/$(pgrep -x cosmic-comp)/fd | grep -c memfd:smithay-client-toolkit
 ```
 
-Começar pelo **D1**, em `cosmic-applets/cosmic-app-list/src/app.rs`:
+### Correção da leitura: são 15 pools por POPUP, não por hover
 
-- o popup de preview nasce nos blocos de `get_popup` das linhas ~1673 e ~1741
-  (os dois com `size_limits = Limits::NONE`, sem teto);
-- há 14 `destroy_popup` no arquivo — o popup é destruído, mas os pools das
-  superfícies dele não;
-- os suspeitos são as transições que a POP Flow acrescentou: hover que troca de
-  app sem fechar o popup anterior (`188f8a4e`) e o popup com grab (`ffb217e8`),
-  que é de onde deve vir a superfície de 7,65 MB (= 1920×1044×4, tela menos
-  painel).
+Desde `ffb217e8` o popup agarra o ponteiro e **não troca** ao passar por outro
+ícone. O guarda está explícito no `app.rs`:
+
+```rust
+Message::HoverPreviewEnter(id, parent_window_id) => {
+    // Don't stack onto an already-open popup
+    if self.popup.is_some() { return Task::none(); }
+```
+
+Durante os 90 s do teste, portanto, **só um popup pôde abrir** — os demais
+hovers foram bloqueados. O padrão medido bate exatamente: 55 s plano, +15 num
+degrau, 30 s plano. Logo:
+
+> **Uma única abertura do popup de preview = 15 pools = 55 MB, 0 liberados.**
+
+Confere com o acumulado: 3870 ÷ 15 ≈ **258 aberturas** em 24 h de uso.
+
+### Onde o D1 NÃO está
+
+O `app.rs` cria **um** popup: uma chamada de `get_popup`, um `window::Id`. Os
+15 buffers não são dele — são alocados pela **libcosmic/iced-sctk** ao renderizar
+e redimensionar aquela superfície. Três têm exatamente `1920×1044×4`, a tela
+menos o painel, o que sugere superfície dimensionada para a área toda antes de
+ser limitada.
+
+Os caminhos de destruição no `app.rs` foram revisados e estão razoáveis:
+`close_popups`, `Activate`, `Toggle`, `PinApp`, `UnpinApp`, `Quit` e
+`CloseRequested` limpam o estado. **Patch no `app.rs` seria mirar no lugar
+errado.**
+
+### Por onde começar de verdade
+
+A libcosmic é dependência git com checkout local, e o `Cargo.toml` do
+`cosmic-applets` **já tem as linhas de patch local comentadas**:
+
+```toml
+# [patch."https://github.com/pop-os/libcosmic"]
+# libcosmic = { path = "../libcosmic" }
+```
+
+1. clonar a libcosmic em `../libcosmic` (rev `511384f6` do `Cargo.lock`) e
+   ligar o patch;
+2. **instrumentar antes de consertar** — um log por criação e destruição de
+   pool, com tamanho. Em minutos de uso isso diz quais dos 15 são quais e qual
+   não é destruído;
+3. só então o patch, com endereço.
 
 O método que funcionou e vale repetir para validar a correção: **linha de base
 ociosa é exatamente zero**, então basta comparar os inodes dos `memfd` do
