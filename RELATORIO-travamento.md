@@ -1,10 +1,47 @@
 # Relatório — travamento progressivo da sessão
 
+> ## ⚠️ Segunda vistoria — 5 de agosto, 13h55
+>
+> **O vazamento diagnosticado em 3 de agosto foi corrigido e a correção
+> funcionou. Existe um segundo vazamento, diferente, e é ele que está travando
+> a máquina agora.** Leia a [§6](#6-segunda-vistoria--5-de-agosto) primeiro; o
+> que vem antes é o histórico do primeiro.
+
 Sintoma relatado: depois de um tempo o sistema fica travado, o mouse "não
 acompanha a taxa de atualização" e o scroll fica truncado.
 
-**Não é cache, nem sujeira acumulada de sistema. É um vazamento de memória**,
-e o processo que vaza é um dos que o POP Flow instalou.
+**Não é cache, nem sujeira acumulada de sistema.** São **duas coisas somadas**,
+e só uma delas é do POP Flow.
+
+> **Correção (mesma vistoria, medição posterior).** A primeira versão deste
+> relatório atribuiu o sintoma inteiro ao vazamento do POP Flow. Estava errado.
+> O usuário observou que a lentidão **já existia antes do POP Flow**, e a
+> medição confirma: a máquina já vivia perto do limite por conta do uso normal.
+> O vazamento é o que transformou "às vezes lento" em "trava sempre depois de um
+> tempo" — é agravante, não a causa única. O diagnóstico abaixo reflete isso.
+
+| | |
+|---|---|
+| **Crônico** (anterior ao POP Flow) | 23 GB de RAM sustentando Chrome, WhatsApp e várias sessões de Claude Code ao mesmo tempo. Já perto do limite, sem vazar. |
+| **Agudo** (do POP Flow) | `cosmic-app-list` vazando ~150 MB/min. Dobra a cada ~25 min e estoura qualquer folga. |
+
+### O Claude Code é a causa? Não.
+
+Medido, porque a pergunta merece número e não palpite. Quatro sessões
+simultâneas, três amostras de 20 s cada:
+
+```
+claude:379 → 377 → 375 MB
+claude:350 → 356 → 352 MB
+claude:371 → 356 → 359 MB
+claude:339 → 326 → 329 MB
+```
+
+**Oscilam, não crescem** — sobem e descem dezenas de MB, que é coletor de lixo
+funcionando. Somam ~1,4 GB, o que é um pedaço real dos 23 GB, mas é um pedaço
+**estável**. O Chrome idem (3,84 GB nas duas amostras, parado).
+
+Nenhum dos dois vaza. Eles ocupam a folga; quem a consome sem parar é o applet.
 
 ---
 
@@ -174,3 +211,270 @@ applet corrigido isso deixa de ser crítico, mas vale saber que a folga é peque
 
 O C1 é curto e o C2 é o que importa. Vale fazer os dois antes de voltar aos
 gestos.
+
+---
+
+# 6. Segunda vistoria — 5 de agosto
+
+Sintoma novo e pior: o sistema trava por **vários minutos**, e desta vez **o
+áudio trava junto**. Áudio travando é o sinal de que não é mais engasgo de
+quadro — é a máquina inteira parada esperando disco.
+
+## 6.1 O que fizemos mais cedo, e funcionou
+
+Em 3 de agosto, 15h32, o commit `3446f017` (`cosmic-applets`) fechou o
+vazamento de sessões de screencopy: cada miniatura guardava um clone forte da
+`CaptureSession`, o `Drop` nunca rodava, e nada era destruído. O binário foi
+instalado um minuto depois (`/usr/bin/cosmic-app-list`, 15h33).
+
+**A correção funcionou, e dá para provar.** O sintoma daquele vazamento era o
+compositor segurando descritores de captura abertos — eram 2888 na primeira
+vistoria. Hoje:
+
+```
+fds do compositor com nome "app-list-screencopy":  0
+RSS do cosmic-app-list:                            18 MB   (era 1,4 GB)
+```
+
+Zero. O applet voltou ao tamanho de applet. Aquele vazamento está morto.
+
+## 6.2 O segundo vazamento
+
+O compositor continua acumulando descritores — só que **de outra coisa**:
+
+```
+cosmic-comp (pid 2403):  4206 fds abertos, 3891 em arquivos DELETADOS
+  3870  memfd:smithay-client-toolkit    ← estes
+     8  memfd:smithay-dmabuffeedback-format-table
+     3  memfd:xwayland-shared
+```
+
+Somando o tamanho real de cada um dos 3870:
+
+```
+20 457 MB — 20 GB presos em buffers que ninguém libera
+média de 5,4 MB por buffer
+```
+
+Não são buffers de captura. São **pools de memória compartilhada de
+superfície** (`wl_shm_pool`), criados pelo cliente e mantidos abertos pelo
+compositor porque o `destroy` do pool nunca chega. O cliente já fechou o lado
+dele — o `cosmic-app-list` tem só 3 abertos agora. Quem segura os 3870 é o
+compositor, e memória de `shm` **não é recuperável**: o kernel não pode
+descartá-la como faz com cache, só pode empurrá-la para o swap.
+
+### Os tamanhos dizem de onde vêm
+
+| quantidade | tamanho | soma |
+|---|---|---|
+| 2037 | 7,65 MB | 15,6 GB |
+| 1678 | 2,72 MB | 4,5 GB |
+| 176 | outros | ~0,4 GB |
+
+Dois tamanhos dominam, em proporção de quase **1:1** — ou seja, **duas
+superfícies criadas por evento**, cerca de 1800 a 2000 eventos ao longo de 24 h
+de sessão. E 7,65 MB é exatamente `1920 × 1044 × 4`: a sua tela (1920×1080)
+menos a altura do painel.
+
+Isso combina com o popup de preview no hover, que desde `ffb217e8` é um popup
+**interativo (com grab)**: um popup com grab precisa de uma superfície do
+tamanho da tela para capturar o clique fora, além da superfície do próprio
+preview. Duas superfícies por hover, ~10,4 MB por hover, nenhuma liberada.
+
+**Isto era inferência quando foi escrito. Deixou de ser — ver §6.6.**
+
+## 6.3 Por que isso trava o áudio
+
+```
+RAM:   23 Gi total —  22 Gi em uso,  704 Mi livres
+Swap:  19 Gi total —  19 Gi em uso,   96 Ki livres     ← 0,0005% livre
+zram:  16 G  — 13 G de dados comprimidos em 1,6 G de RAM
+```
+
+Dos 20 GB de swap ocupados, **apenas 8,5 GB pertencem a processos**. Os outros
+**11,9 GB são shmem** — os buffers vazados, empurrados para o disco.
+
+Com o swap cheio e 20 GB de memória não-recuperável, o kernel não tem o que
+liberar. Toda alocação vira espera por disco. O contador do próprio kernel
+desde o boot:
+
+```
+/proc/pressure/io      parada TOTAL: 11 709 s  (195 min)
+/proc/pressure/memory  parada TOTAL:    231 s  (3,8 min)
+```
+
+195 minutos, em 24 h de uptime, com **todas** as tarefas bloqueadas em I/O.
+O `load average` de 15 min estava em **23,63** no momento da vistoria.
+
+O áudio trava aí. O PipeWire tem prazo de milissegundos e suas páginas foram
+para o swap (6 MB do `pipewire`, 6 MB do `wireplumber`). Quando o buffer que
+ele precisa está num disco criptografado atrás de uma fila de swap, o áudio
+para. **O áudio travar não é um sintoma novo — é o mesmo travamento, agora
+grande o bastante para alcançar o processo mais sensível a atraso da máquina.**
+
+## 6.4 Ritmo do vazamento
+
+20 457 MB em 1446 minutos de uptime = **~14 MB/min, permanentes.**
+
+É menos que os 150 MB/min do primeiro vazamento, mas com uma diferença que
+importa: aqueles 150 MB/min eram RSS do applet, transitório. Estes 14 MB/min
+**nunca voltam** enquanto o compositor viver.
+
+Duas amostras com 40 s de intervalo, sem ninguém tocar na máquina: `3870 → 3870`.
+**Não cresce sozinho.** Cresce por interação — o que reforça a §6.2.
+
+## 6.5 O que fazer
+
+### `pkill -x cosmic-panel` NÃO resolve mais — medido, 14h08
+
+Eu previ que reiniciar o painel devolveria os 20 GB, porque a queda da conexão
+Wayland deveria fazer o compositor destruir os recursos daquele cliente.
+**Previsão errada.** Executado e medido:
+
+```
+             painel      pools     RAM        swap livre
+antes        2467        3870      22 Gi      196 KiB
+depois       338519      3877      22 Gi       26 MiB
+```
+
+O painel e o `cosmic-app-list` reiniciaram de fato — PIDs novos (338519,
+338568), 80 s de vida. O compositor ficou de pé o tempo todo (24 h de uptime).
+**Nem um byte voltou.** Os pools subiram para 3877: os 7 novos são das
+superfícies do painel recém-nascido.
+
+Isso muda o diagnóstico de lugar:
+
+> **O compositor não libera os pools nem quando o cliente que os criou morre.**
+> Um `wl_shm_pool` cujo dono desapareceu ainda está aberto no `cosmic-comp`.
+> Isso não é um cliente que esquece de destruir — é o **compositor retendo o
+> objeto além do tempo de vida da conexão**.
+
+Consequências práticas:
+
+- **Não existe alívio barato.** Só reiniciar o `cosmic-comp` — ou seja, encerrar
+  a sessão / reiniciar a máquina — devolve os 20 GB.
+- O `pkill -x cosmic-panel` da §3 continua valendo para o *primeiro* vazamento
+  (RSS do applet), que já está corrigido. Para este, não serve.
+- O que "limpou e melhorou a performance" ontem foi o **reboot** das 13h49 de
+  4/8, não um comando de limpeza. O contador começa do zero a cada boot e leva
+  ~24 h para voltar a estrangular a máquina, que é exatamente o intervalo que
+  você observou.
+
+### O teste que fecha o diagnóstico (2 minutos)
+
+Logo depois de reiniciar o painel, com a contagem zerada:
+
+1. medir `ls /proc/$(pgrep -x cosmic-comp)/fd | wc -l`
+2. passar o mouse pela dock umas 20 vezes, sem clicar
+3. medir de novo
+
+Se subir ~40 (dois por hover), o popup de preview está confirmado e a correção
+tem endereço exato. Se não subir, o cliente é outro e a busca continua.
+
+### A correção
+
+Depende do resultado acima. Se for o popup: garantir que **todo** caminho de
+fechamento destrua o popup — há 14 chamadas de `destroy_popup` no `app.rs`, e
+basta um caminho de saída sem ela para vazar. Os candidatos são as transições
+que a POP Flow acrescentou: hover que troca de app sem fechar o popup anterior
+(`188f8a4e`), e o popup com grab (`ffb217e8`).
+
+### Independente disso — o teto crônico continua
+
+O QtWebEngine (WhatsApp) soma ~5 GB em swap e o Chrome mais um tanto. Com 20 GB
+livres isso é folgado; a §5 do primeiro relatório segue valendo.
+
+## 6.6 Confirmado: é o hover na dock — 14h18
+
+O teste ficou possível quando a linha de base se revelou **exatamente zero**.
+Duas janelas sem ninguém tocar na máquina, com os inodes comparados um a um:
+
+```
+14:14:36 → 14:16:08   3916 → 3916    novos: 0    liberados: 0
+```
+
+Zero em 92 s. Não há laço de fundo, timer nem relógio de painel criando pools.
+Com o fundo preto, qualquer crescimento durante uma ação pertence àquela ação.
+
+Janela de 90 s, com o usuário passando o mouse pela dock e mais nada:
+
+```
+14:17:12  t0 = 3916
+   ...       3916      (11 amostras planas)
+14:18:07     3916
+14:18:12     3931      ← +15
+14:18:42  t1 = 3931
+```
+
+E os pools novos, medidos pelo inode:
+
+| quantidade | tamanho | soma |
+|---|---|---|
+| 3 | 7,65 MB | 23,0 MB |
+| 12 | 2,72 MB | 32,6 MB |
+| **liberados** | — | **0 MB** |
+
+**Saldo: 55 MB vazados numa única passada de mouse pela dock.**
+
+Os dois tamanhos são **exatamente** os dois que dominam os 20 GB acumulados
+(§6.2). Mesma assinatura, mesmo produtor. A inferência virou medição.
+
+### As duas falhas, que são independentes
+
+1. **No cliente** — cada abertura do popup de preview aloca superfícies novas e
+   nenhuma é destruída. 15 pools, 0 liberados. Há 14 chamadas de
+   `destroy_popup` no `app.rs`; destruir o popup evidentemente não destrói os
+   pools das superfícies dele.
+2. **No compositor** — o `cosmic-comp` **não libera os pools nem quando o
+   cliente morre** (§6.5: painel reiniciado, 3870 pools intactos). Esta é a que
+   torna a primeira fatal: normalmente o vazamento de um applet se resolveria
+   sozinho quando ele reinicia.
+
+A segunda é a mais grave e não é da POP Flow — é do compositor, que também
+temos como fork (`cosmic-comp`, branch criada em 3/8).
+
+### Ordem de correção
+
+| | | |
+|---|---|---|
+| **agora** | reiniciar a sessão | única coisa que devolve os 20 GB |
+| **enquanto não há correção** | `cosmic-applets/uninstall.sh` | tira o preview no hover; para a hemorragia |
+| **D1** | destruir os pools ao fechar o popup | corta 55 MB por passada de mouse |
+| **D2** | liberar pools órfãos no `cosmic-comp` | impede que qualquer cliente repita isso |
+
+O D2 vale mandar para o upstream: um compositor que segura buffers de clientes
+mortos transforma o bug de qualquer applet num travamento de sessão.
+
+## 6.7 Decisão — 5 de agosto
+
+**O preview no hover fica.** Não desinstalamos o applet nem removemos a feature:
+corrigimos o D1 e o D2 para que ela funcione sem vazar. A opção de rodar o
+`uninstall.sh` está descartada.
+
+### Retomada, depois do reboot
+
+O reboot zera o contador — é por isso que a máquina "melhora sozinha" e volta a
+travar em ~24 h. **Reiniciar não corrige nada**, só devolve os 20 GB.
+
+Estado a confirmar logo ao voltar (deve estar na casa das dezenas, não dos
+milhares):
+
+```bash
+ls -l /proc/$(pgrep -x cosmic-comp)/fd | grep -c memfd:smithay-client-toolkit
+```
+
+Começar pelo **D1**, em `cosmic-applets/cosmic-app-list/src/app.rs`:
+
+- o popup de preview nasce nos blocos de `get_popup` das linhas ~1673 e ~1741
+  (os dois com `size_limits = Limits::NONE`, sem teto);
+- há 14 `destroy_popup` no arquivo — o popup é destruído, mas os pools das
+  superfícies dele não;
+- os suspeitos são as transições que a POP Flow acrescentou: hover que troca de
+  app sem fechar o popup anterior (`188f8a4e`) e o popup com grab (`ffb217e8`),
+  que é de onde deve vir a superfície de 7,65 MB (= 1920×1044×4, tela menos
+  painel).
+
+O método que funcionou e vale repetir para validar a correção: **linha de base
+ociosa é exatamente zero**, então basta comparar os inodes dos `memfd` do
+compositor antes e depois de uma passada de mouse pela dock. Hoje esse número é
+**+15 pools / 55 MB**. Corrigido, tem que ser 0.
