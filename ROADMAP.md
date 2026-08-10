@@ -167,6 +167,15 @@ cliques e o reconhecimento do mouse no COSMIC — ver histórico. Um preview que
 troca ao vivo E é clicável exigiria mudança no **compositor** (quem roteia o
 input do popup); fica como ideia futura.
 
+### ✅ Feito — **vazamento do applet minimize** (`fb72bf7b`)
+O mesmo ciclo de referência que o `3446f017` tirou do app-list: o `FrameData`
+guardava um `CaptureSession` forte, o objeto do frame sobrevive à captura, então
+o `Drop` que manda `destroy` nunca rodava — uma sessão e seus buffers vazados
+por captura, dos dois lados do protocolo. Ficou de fora daquele commit porque
+este applet captura ao minimizar (sangra devagar), não ao passar o mouse. Não
+está no painel aqui, então a correção vale por paridade com a versão medida, não
+por medição própria.
+
 ### ✅ Feito — **G1+G2: applet "mostrar área de trabalho"** (`de49826a`)
 Um clique guarda todas as janelas do workspace atual; o próximo traz **de volta
 exatamente aquelas**. Applet novo (`cosmic-applet-show-desktop`), sem tocar no
