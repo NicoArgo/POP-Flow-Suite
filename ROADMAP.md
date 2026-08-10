@@ -303,6 +303,21 @@ terminal** e o que o `--resolve-rule` entrega para a statusline do Claude. Regra
 antigas não perdem a cor: a chave `cursor` ainda é lida uma vez e dobrada no
 `accent` na primeira abertura.
 
+### ✅ Feito — **a regra é identidade, não um segundo tema** (`3467fc5`)
+O diálogo perdeu os dois esquemas de cores e a transparência — quatro linhas de
+ruído em volta dos dois campos que realmente se preenchem, e nenhuma regra do
+config usava. As chaves continuam valendo se escritas à mão no arquivo (agora
+documentadas como "só no arquivo"). *Usar esta aparência aqui* virou **Criar
+regra para esta pasta**: cria, abre, e deixa nome e cor com você — congelar tema
+e opacidade sem ter onde vê-los ou desfazê-los era pior que não ter a ação.
+A lista mostra o **nome final da pasta, na cor dela**, no lugar do caminho; o
+caminho inteiro segue no editor da regra.
+
+A statusline do Claude (`.claude/statusline.sh`, fora do versionamento) perdeu o
+último nome fixo: sem regra, o rótulo é o nome da pasta em maiúsculas — a mesma
+derivação que o terminal usa na aba. Assim a etiqueta é sempre o título da aba,
+e nada mais escreve "POP FLOW" dentro de outro projeto.
+
 ### 📋 A validar em uso
 - A decisão do blur (regra vence o alfa do tema) — a única escolha que não deu
   para conferir a olho.
