@@ -30,8 +30,17 @@ Alt+Tab estilo Windows com grade de miniaturas ao vivo. Instalado e em uso.
   terminal*, *Abrir pasta*, *Copiar caminho* (para resultados com caminho de
   arquivo) — com as opções do pop-launcher.
 - **Auto-reapply** após updates de pacote; `install.sh` / `uninstall.sh` / README.
+- **Vazamento de memória corrigido** (`50b5b26`): a captura de miniaturas criava
+  um pool shm e um `wl_buffer` por janela a cada abertura e só destruía o pool.
+  Destruir um pool não invalida os buffers feitos dele, então cada abertura
+  deixava ~8 MiB por janela mapeados no `cosmic-comp` até o fim da sessão — a
+  causa do travamento em ~24 h descrito em
+  [RELATORIO-travamento.md](RELATORIO-travamento.md) §7. Medido: 1153 MiB
+  retidos numa sessão de 40 min, zero depois de `pkill -x cosmic-launcher`.
 
 ### 📋 Planejado / a validar
+- **Instalar a correção do vazamento e validar**: com o sampler rodando, abrir e
+  fechar o Alt+Tab várias vezes tem que deixar o contador em 0.
 - Validar em uso real o menu de contexto (o plugin de arquivos do pop-launcher
   realmente expõe o caminho? senão, ajustar a extração em `result_path`).
 - Ajuste fino do tamanho das miniaturas em telas/contagens variadas.
@@ -199,7 +208,7 @@ O terminal do COSMIC. Fork criado **2026-08-03**, a partir do upstream 1.5.0
 ### ✅ Feito — **T1: aparência por diretório**
 Cada pasta pode ter sua própria aparência, persistida de forma independente do
 ajuste global e das outras pastas: **esquema de cores, transparência, título da
-aba e cor do cursor**. Aplica ao abrir o terminal **e ao vivo quando você dá
+aba e a cor da pasta** (que desde `e28197e` também pinta o cursor). Aplica ao abrir o terminal **e ao vivo quando você dá
 `cd`. Fonte e tamanho ficaram de fora da v1.
 
 Modelo: uma lista de **regras** (`dir_rules`) separada dos perfis — perfil diz
@@ -226,8 +235,8 @@ _Estado: **T1 completa.** F0 (fork + docs), F1 (modelo `DirRule` + resolução
 
 **Como usar:** botão direito no terminal → *Usar esta aparência aqui* fixa a
 aparência atual na pasta em que você está. Depois, **Arquivo → Regras por
-pasta...** para ajustar cores, transparência, título, cursor e se a regra cobre
-a árvore. Cada campo pode ficar em "herdar" — é isso que mantém as pastas
+pasta...** para ajustar cores, transparência, título, a cor da pasta e se a
+regra cobre a árvore. Cada campo pode ficar em "herdar" — é isso que mantém as pastas
 independentes.
 
 Editar `~/.config/cosmic/com.system76.CosmicTerm/v1/dir_rules` à mão continua
@@ -286,15 +295,22 @@ ligado à regra. **48 testes passando** (eram 38). **Falta instalar e validar em
 uso** — em especial se a normalização de luminosidade do `with_accent` deixa a
 faixa (hex literal) visivelmente diferente do acento da interface._
 
+### ✅ Feito — **uma cor por pasta** (`e28197e`)
+A cor do cursor e o acento da pasta eram dois campos, e o config real mostrava o
+resultado: o mesmo hex digitado duas vezes em toda regra que usava os dois. Agora
+é um campo só — `accent` pinta o acento da janela, a faixa, **o cursor do
+terminal** e o que o `--resolve-rule` entrega para a statusline do Claude. Regras
+antigas não perdem a cor: a chave `cursor` ainda é lida uma vez e dobrada no
+`accent` na primeira abertura.
+
 ### 📋 A validar em uso
 - A decisão do blur (regra vence o alfa do tema) — a única escolha que não deu
   para conferir a olho.
 - Se "fixar a aparência atual" captura o que se espera (cores + transparência,
-  não título/cursor).
+  não título).
 
 ### 💡 Ideias
 - Atalho de teclado para *Usar esta aparência aqui*.
-- Seletor de cor visual no lugar do campo de hex do cursor.
 - Indicador na aba de que a pasta tem regra.
 
 **Decisão tomada no F2 (o ponto que o plano deixou em aberto):** com o blur do
