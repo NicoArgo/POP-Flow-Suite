@@ -38,12 +38,31 @@ Alt+Tab estilo Windows com grade de miniaturas ao vivo. Instalado e em uso.
   [RELATORIO-travamento.md](RELATORIO-travamento.md) §7. Medido: 1153 MiB
   retidos numa sessão de 40 min, zero depois de `pkill -x cosmic-launcher`.
 
+### ✅ Validado — **vazamento corrigido, medido depois de instalar** (10/8)
+Com a correção instalada: 25 aberturas do overlay, **0 pools órfãos, 0 MiB**;
+uma hora e quarenta de sessão, também 0. Antes eram 1153 MiB em 40 minutos. O
+que conta como vazamento é o fd que *só* o compositor segura — o
+`sampler.py` cruza os inodes de todos os processos para separar isso do
+normal (uma ou duas superfícies vivas por cliente).
+
+### ✅ Feito — **menu de contexto: o caminho não vinha de onde achávamos** (10/8)
+Perguntando direto ao pop-launcher (`{"Search":"~/Doc"}`), o plugin de arquivos
+responde `name` = só o nome e `description` = o **tamanho** ("12.00 KiB"). Como
+o `result_path` procurava um caminho nesses dois campos, *Abrir no terminal*,
+*Abrir pasta* e *Copiar caminho* **nunca apareciam** — e é justo o plugin que
+mais quer essas ações. O plugin `recent`, por outro lado, devolve um URI
+`file://` percent-encoded, que também não resolvia.
+
+Agora os três formatos são cobertos: URI `file://`, caminho literal, e — para o
+navegador de arquivos — a pasta sai da **consulta digitada** e o nome do
+resultado a completa. Nomes vêm percent-encoded (`%C3%81rea%20de%20trabalho`),
+então são decodificados antes de testar a existência, e `..` é recusado para não
+agir fora da pasta listada. Testes cobrem os formatos exatos que o pop-launcher
+devolveu nesta máquina.
+
 ### 📋 Planejado / a validar
-- **Instalar a correção do vazamento e validar**: com o sampler rodando, abrir e
-  fechar o Alt+Tab várias vezes tem que deixar o contador em 0.
-- Validar em uso real o menu de contexto (o plugin de arquivos do pop-launcher
-  realmente expõe o caminho? senão, ajustar a extração em `result_path`).
-- Ajuste fino do tamanho das miniaturas em telas/contagens variadas.
+- Ajuste fino do tamanho das miniaturas em telas/contagens variadas — precisa de
+  olho, em telas e contagens de janela diferentes.
 
 ### 💡 Ideias
 - "Abrir no terminal" também para apps/resultados sem caminho (abrir na home).
@@ -329,12 +348,10 @@ e nada mais escreve "POP FLOW" dentro de outro projeto.
 
 ### 📋 A validar em uso
 - A decisão do blur (regra vence o alfa do tema) — a única escolha que não deu
-  para conferir a olho.
-- Se "fixar a aparência atual" captura o que se espera (cores + transparência,
-  não título).
+  para conferir a olho. A aritmética tem teste; o julgamento visual não.
 
 ### 💡 Ideias
-- Atalho de teclado para *Usar esta aparência aqui*.
+- Atalho de teclado para *Criar regra para esta pasta*.
 - Indicador na aba de que a pasta tem regra.
 
 **Decisão tomada no F2 (o ponto que o plano deixou em aberto):** com o blur do
@@ -344,11 +361,16 @@ ela **vence mesmo sob blur**; sem regra, o comportamento é idêntico ao de ante
 Isso está isolado em `terminal_opacity()`, com testes. **Falta validar a olho**
 quando instalar.
 
-### 📋 Planejado
-- Instalar exige `apt upgrade cosmic-term` antes (sistema em 1.0.7, upstream em
-  1.5.0) — senão o backup `.orig` guarda um binário de uma epoch anterior.
-- ⚠ `cosmic-term` **não** é gerenciado pela sessão: dar `pkill` nele fecha os
-  terminais abertos do usuário. O `install.sh` deve só avisar, como o do Files.
+### ✅ Feito — **desinstalar não pode virar downgrade**
+O `cosmic-term.orig` desta máquina é **1.0.7** e o fork é 1.5.0: o backup foi
+tomado antes do guard existir. Hoje é inofensivo, porque o pacote apt também
+está em 1.0.7 — a armadilha é depois de um `apt upgrade`, quando o
+`uninstall.sh` devolveria silenciosamente o 1.0.7. Ele agora compara a versão do
+backup com a do pacote e **recusa**, apontando para
+`sudo apt install --reinstall cosmic-term`, que é o original de verdade.
+
+O `install.sh` já não mata terminais (não há `pkill` nele): `cosmic-term` não é
+gerenciado pela sessão, então matá-lo fecharia as janelas abertas do usuário.
 
 ### 💡 Ideias
 - Fonte e tamanho por pasta (cortado da v1 — mexe em métricas e tamanho de
