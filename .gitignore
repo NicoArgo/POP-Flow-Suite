@@ -7,6 +7,9 @@ cosmic-workspaces-epoch/
 cosmic-applets/
 # Any other cosmic-* component that gets forked into the workspace
 cosmic-*/
+# Upstream checkout kept for debugging the shm leak. Not a fork, not ours, and
+# the `cosmic-*` line above does not catch it.
+libcosmic/
 
 # Local prebuilt binaries / backups kept in the workspace
 cosmic-launcher-baseline-*

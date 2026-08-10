@@ -516,3 +516,82 @@ O método que funcionou e vale repetir para validar a correção: **linha de bas
 ociosa é exatamente zero**, então basta comparar os inodes dos `memfd` do
 compositor antes e depois de uma passada de mouse pela dock. Hoje esse número é
 **+15 pools / 55 MB**. Corrigido, tem que ser 0.
+
+---
+
+# 7. Achado — 10 de agosto: é o nosso launcher
+
+**O vazamento é do `cosmic-launcher` (POP Flow), no caminho de captura das
+miniaturas.** Corrigido no commit `50b5b26` do fork. A dock **não** é a fonte —
+a §6.6 estava errada, e as hipóteses da §6.7 (`app.rs`, libcosmic, retenção
+própria do `cosmic-comp`) estão todas descartadas.
+
+## 7.1 O teste que fecha tudo, em 5 segundos
+
+```bash
+pkill -x cosmic-launcher
+```
+
+Antes: **266 pools órfãos, 1153,9 MiB**. Depois: **0**. Cada byte vazado estava
+pendurado na conexão do launcher; o COSMIC o reinicia sozinho em seguida. Isso é
+o alívio imediato enquanto a correção não é instalada — e é a prova de autoria,
+porque o compositor libera tudo de um cliente que morre.
+
+## 7.2 O mecanismo
+
+Três fatos, um em cima do outro:
+
+1. No `wayland-server`, o handle de um objeto (`WlBuffer`) **carrega o próprio
+   user-data**: `data: Option<Arc<dyn Any>>` (gerado pelo `wayland-scanner`).
+2. No smithay, o user-data de um buffer shm é `ShmBufferUserData { pool:
+   Arc<Pool>, .. }`, e o `Pool` é **dono do `OwnedFd`** do memfd.
+3. Pelo protocolo, **destruir o pool não invalida os buffers feitos dele**.
+
+Logo: enquanto existir um `wl_buffer`, o memfd fica aberto e mapeado no
+compositor — mesmo com o pool destruído e o fd fechado no cliente. É por isso
+que o censo não achava dono: o cliente tinha fechado a sua cópia.
+
+## 7.3 O que o launcher fazia
+
+Em `src/wayland.rs`, a cada abertura do Alt+Tab, **por janela**: um `RawPool`
+(memfd `smithay-client-toolkit`) de `largura×altura×4` e um `wl_buffer`. Ao
+chegar o `ready`, o pool era solto (o `Drop` do `RawPool` o destrói e fecha o
+fd) e **o buffer era esquecido**. Janela maximizada = 1920×1044×4 = 8017920 B —
+exatamente o tamanho que dominava o censo. Quinze janelas por abertura é o
+"15 pools por popup" da §6.7, atribuído à dock por coincidência de ritmo.
+
+O applet da dock faz certo (`pool.destroy(); buffer.destroy();`), e o
+`cosmic-applet-minimize` também. O compositor não segura nenhum memfd
+`app-list-screencopy` — o nome que o applet dá aos seus.
+
+## 7.4 Como foi medido
+
+**Censo de órfãos** (`scratchpad/sampler.py`): fds `memfd:smithay-client-toolkit`
+que **só** o `cosmic-comp` segura, correlacionando inodes entre todos os
+processos. Ocioso não cresce; abrir o app library crescia em degraus.
+
+**Cliente-sonda** (`scratchpad/shm-probe`), contra o compositor rodando:
+
+| o que a sonda faz | fds retidos |
+|---|---|
+| toplevel: 15 buffers, anexa e destrói cada um | 0 (só o buffer corrente) |
+| popup: 5 ciclos abre/desenha/fecha | 0 |
+| layer surface: 5 ciclos, destruindo | 0 |
+| layer surface: desmapeia e mantém a superfície | 0 |
+| cliente morre sem destruir nada | 0 (o compositor limpa) |
+| **captura: pool destruído, buffer não — como o launcher** | **+1 por captura** |
+| **a mesma captura com `buffer.destroy()`** | **0** |
+
+O compositor está limpo em todos os caminhos comuns. O único que vaza é o que
+deixa um `wl_buffer` vivo.
+
+## 7.5 Validar depois de instalar
+
+Linha de base ociosa é exatamente zero, então:
+
+```bash
+python3 scratchpad/sampler.py 5 300   # deixa rodando
+# abrir e fechar o Alt+Tab várias vezes
+```
+
+Tem que ficar em 0. Hoje, sem a correção, são ~8 MiB por janela por abertura.
