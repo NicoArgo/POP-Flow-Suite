@@ -19,11 +19,11 @@ para o dia a dia — sem abandonar a estética e a base do COSMIC.
 | Componente | Repo (fork na conta) | Papel | Status |
 |---|---|---|---|
 | **Launcher** (`cosmic-launcher/`) | [`NicoArgo/POP-Flow`](https://github.com/NicoArgo/POP-Flow) | Alt+Tab com grade de miniaturas ao vivo, fechar janela, menu de contexto rico | 🟢 ativo, instalado |
-| **Files** (`cosmic-files/`) | `NicoArgo/cosmic-files` (fork) | Gerenciador de arquivos — preview ampliado no hover (F1) | 🟢 F1 implementada |
+| **Files** (`cosmic-files/`) | `NicoArgo/cosmic-files` (fork) | Gerenciador de arquivos — preview ampliado no hover, pastas expansíveis na lista e na barra lateral, abrir no terminal | 🟢 em uso |
 | **Overview** (`cosmic-workspaces-epoch/`) | `NicoArgo/cosmic-workspaces-epoch` (fork) | Tela do Super (Task-View) — portar X de fechar / grade / preview | 🟡 iniciando |
-| **Compositor** (`cosmic-comp/`) | `NicoArgo/cosmic-comp` (fork) | Snap/tiling de janelas estilo Windows (Aero-snap) | 🟡 iniciando (⚠ é o compositor) |
+| **Compositor** (`cosmic-comp/`) | `NicoArgo/cosmic-comp` (fork) | Gestos de três dedos (janela, overview, mostrar área de trabalho) | 🟡 pronto, **não instalado** (⚠ é o compositor) |
 | **Barra de tarefas** (`cosmic-applets/`) | `NicoArgo/cosmic-applets` (fork) | Preview de janela no hover + applet "mostrar área de trabalho" | 🟢 v1 + G2 |
-| **Terminal** (`cosmic-term/`) | `NicoArgo/cosmic-term` (fork) | Aparência por diretório: cada pasta com suas cores, transparência, título e cursor | 🟢 T1 completa |
+| **Terminal** (`cosmic-term/`) | `NicoArgo/cosmic-term` (fork) | Identidade por pasta: um nome e **uma cor** que pintam a aba, o acento da janela, a faixa do topo, o cursor e a statusline do Claude | 🟢 T1 + T2 |
 
 Veja o estado detalhado e o que vem a seguir em **[ROADMAP.md](ROADMAP.md)**.
 
@@ -56,7 +56,7 @@ Pop Flow/                      ← este workspace (o guarda-chuva da suíte)
 ├── cosmic-files/              ← fork: NicoArgo/cosmic-files
 ├── cosmic-applets/            ← fork: NicoArgo/cosmic-applets
 ├── cosmic-term/               ← fork: NicoArgo/cosmic-term
-├── cosmic-comp/               ← clone de referência (upstream)
+├── cosmic-comp/               ← fork: NicoArgo/cosmic-comp  (o compositor)
 └── cosmic-workspaces-epoch/   ← clone de referência (upstream)
 ```
 

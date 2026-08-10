@@ -38,7 +38,9 @@ gh repo fork pop-os/<componente> --clone --default-branch-only
 ```
 
 Componentes usados **só como referência** (não modificados) podem ser clones do
-upstream — ex.: `cosmic-comp/`, `cosmic-workspaces-epoch/`.
+upstream — hoje `cosmic-workspaces-epoch/`. Um clone de referência vira fork no
+dia em que recebe o primeiro patch: o `cosmic-comp/` fez essa travessia quando
+ganhou os gestos de três dedos.
 
 > Nota: o launcher vive em `NicoArgo/POP-Flow` (fork renomeado de
 > `cosmic-launcher`). Novos forks mantêm o nome do upstream por padrão; renomear
