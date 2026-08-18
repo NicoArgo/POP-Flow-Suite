@@ -122,10 +122,23 @@ subpastas (só pastas — a barra lateral é uma lista de lugares, não de arqui
 Usa a **indentação nativa do `nav_bar`** do libcosmic, que já desenha as linhas-
 guia; o `segmented_button` não tem chevron, então o gesto é o clique: clicar numa
 pasta em que você **não está** navega e abre; clicar na pasta em que você **já
-está** fecha — assim voltar para a raiz nunca destrói a árvore aberta. As
-subpastas são listadas fora da thread de UI (`Message::NavExpanded`) e ficam em
-cache; `App.nav_expanded` sobrevive às reconstruções do modelo. Liga/desliga em
-**Exibir → Expandir pastas na barra lateral**.
+está** fecha. As subpastas são listadas fora da thread de UI
+(`Message::NavExpanded`); `App.nav_expanded` sobrevive às reconstruções do
+modelo. Liga/desliga em **Exibir → Expandir pastas na barra lateral**.
+
+**A árvore é transitória** (mudança de 2026-08-18, a pedido): ela é um dropdown,
+não um segundo painel. Fecha sozinha quando a aba sai da pasta que a abriu — por
+qualquer caminho: outro lugar na barra lateral, a barra de caminho, o botão
+voltar, duplo-clique na lista, troca de aba (`collapse_nav_tree_unless_inside`,
+chamada depois do `tab.update`, quando a aba **já** se moveu) — e também no
+clique solto na lista de arquivos ou em qualquer área que nenhum widget
+reivindicou (`Message::Mouse`). Só uma ramificação fica aberta por vez; entrar
+numa subpasta **de dentro** dela aninha em vez de fechar, que é o ponto da
+árvore. Fechar descarta as subpastas abertas dentro e o cache de listagem — nada
+sobrevive ao clique que abriu, e uma pasta criada no meio do caminho aparece na
+próxima abertura. O colapso escuta o **soltar** do botão, não o apertar, senão
+arrastar um arquivo da lista para uma subpasta aberta fecharia o alvo no meio do
+gesto.
 
 ### 📋 Planejado / a validar
 - Validar em uso real; ajustar tamanhos/posições conforme feedback.
@@ -137,7 +150,7 @@ cache; `App.nav_expanded` sobrevive às reconstruções do modelo. Liga/desliga 
 - Flag em `TabConfig` (`peek_on_hover` / tamanho) para ligar/desligar/ajustar.
 - Miniaturas maiores/ajustáveis; melhor densidade de grade.
 - Mais itens na sidebar (copiar caminho, abrir em nova janela para arquivos…).
-- Árvore: "recolher tudo", animação de abertura, persistir entre sessões.
+- Árvore: animação de abertura. (Persistir foi decidido contra — ver acima.)
 
 ---
 
@@ -216,6 +229,35 @@ automaticamente**: isso reescreveria a configuração do painel do usuário. Par
 usar: *Configurações → Área de trabalho → Painel → Configurar applets*.
 
 Plano completo em [PLAN-gestos-e-mostrar-area.md](PLAN-gestos-e-mostrar-area.md).
+
+### ✅ Feito — **botões de pasta (Imagens e Downloads)**
+Um clique abre a pasta no `cosmic-files`. **Sem código nosso**: o
+`cosmic-panel-button`, que já vem neste mesmo pacote, desenha um botão a partir
+de uma entrada `.desktop` e roda o `Exec` dela ao ser pressionado — é assim que
+o botão "Aplicativos" funciona. Então cada botão são dois arquivos em
+`data/folder-buttons/`: a entrada que o painel lista como applet, e a entrada
+para a qual ela aponta.
+
+O `Exec` é `cosmic-files "$(xdg-user-dir PICTURES)"`. O applet executa via
+`sh -c`, então a substituição acontece **no clique**: o botão segue o diretório
+XDG onde quer que ele esteja e com o nome que o idioma der (aqui `~/Imagens`),
+em vez de congelar o caminho de uma máquina num arquivo que a gente distribui.
+
+Duas armadilhas que só apareceram rodando:
+- **`Name[pt_BR]` sozinho nunca casa.** A busca de locale tenta o `LANG`
+  inteiro (`pt_BR.UTF-8`) e depois só o que vem antes do `_` (`pt`) — nunca o
+  `pt_BR` puro. É por isso que toda entrada traduzida que o COSMIC distribui
+  carrega as duas chaves; as nossas agora também.
+- **Ícone ou texto não é escolha nossa.** Com o painel em `Custom(28)`, o
+  `cosmic-panel-button` sempre renderiza texto — o "Aplicativos" ao lado é
+  texto pelo mesmo motivo. Ícone exigiria `force_presentation: Icon`, que é uma
+  config compartilhada por todos os botões e mudaria o "Aplicativos" junto.
+  Ficou texto, por decisão de quem usa.
+
+Instala em `/usr/local/share/applications` (software novo, sem auto-reapply,
+nenhum binário a compilar). Diferente do show-desktop, estes **foram**
+adicionados à ala esquerda do painel — foi o pedido; o `plugins_wings` anterior
+está em `plugins_wings.bak-popflow`.
 
 ### 📋 Planejado — gestos de touchpad (G3+)
 Depende de resolver o `cosmic-comp` antes (HEAD destacado + base de fevereiro).
