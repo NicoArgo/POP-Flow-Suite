@@ -156,9 +156,10 @@ os ícones são simbólicos e só são tingidos. A regra de alcance é a do term
 só a pasta, a não ser com `include_subdirs`; a mais funda vence. 6 testes novos
 (51 no total).
 
-_Estado: conferido a olho na lista e na barra lateral; no `master` junto com a
-visão por pasta (`bd62b04`). **Falta:** instalar e ver a atualização ao vivo ao
-mudar uma cor no terminal._
+_Estado: **instalado e validado** (28/09). Lista e barra lateral conferidas a
+olho; ao vivo também: uma regra adicionada no `dir_rules` pintou a pasta em ~3s
+com a janela aberta, e removê-la devolveu o cinza. No `master` junto com a
+visão por pasta (`bd62b04`)._
 
 ### 📋 Planejado / a validar
 - Validar em uso real; ajustar tamanhos/posições conforme feedback.
