@@ -140,7 +140,7 @@ próxima abertura. O colapso escuta o **soltar** do botão, não o apertar, sen�
 arrastar um arquivo da lista para uma subpasta aberta fecharia o alvo no meio do
 gesto.
 
-### ✅ Feito — **pastas na cor da regra** (branch `folder-colors`, `3d3d1c9`)
+### ✅ Feito — **pastas na cor da regra** (`3d3d1c9`, merge `6c1e2ed`)
 A pasta que tem regra no terminal (`dir_rules`, com `accent`) aparece **na cor
 dela** aqui também: lista, grade, árvore inline, área de trabalho e barra
 lateral. O `cosmic-files` lê a **mesma chave** do terminal, sem cópia: uma pasta
@@ -156,9 +156,9 @@ os ícones são simbólicos e só são tingidos. A regra de alcance é a do term
 só a pasta, a não ser com `include_subdirs`; a mais funda vence. 6 testes novos
 (51 no total).
 
-_Estado: conferido a olho na lista e na barra lateral com o binário do branch.
-**Falta:** merge no `master` (que tem trabalho não commitado de outra frente),
-instalar, e ver a atualização ao vivo ao mudar uma cor no terminal._
+_Estado: conferido a olho na lista e na barra lateral; no `master` junto com a
+visão por pasta (`bd62b04`). **Falta:** instalar e ver a atualização ao vivo ao
+mudar uma cor no terminal._
 
 ### 📋 Planejado / a validar
 - Validar em uso real; ajustar tamanhos/posições conforme feedback.
