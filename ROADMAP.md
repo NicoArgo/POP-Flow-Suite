@@ -140,6 +140,26 @@ próxima abertura. O colapso escuta o **soltar** do botão, não o apertar, sen�
 arrastar um arquivo da lista para uma subpasta aberta fecharia o alvo no meio do
 gesto.
 
+### ✅ Feito — **pastas na cor da regra** (branch `folder-colors`, `3d3d1c9`)
+A pasta que tem regra no terminal (`dir_rules`, com `accent`) aparece **na cor
+dela** aqui também: lista, grade, árvore inline, área de trabalho e barra
+lateral. O `cosmic-files` lê a **mesma chave** do terminal, sem cópia: uma pasta
+tem uma cor e um lugar para trocá-la, e uma assinatura do config segue as
+mudanças ao vivo.
+
+O ícone colorido é o SVG do próprio tema com os quatro cinzas trocados por tons
+da cor (a frente é a cor, a aba de trás bem mais escura), com cache por
+(arquivo, cor). As pastas especiais (Documentos, Downloads…) usam os mesmos
+cinzas, então mantêm o desenho. Tema cujas pastas não usam esses cinzas recebe
+uma pasta simples na cor em vez de uma recolorida pela metade. Na barra lateral
+os ícones são simbólicos e só são tingidos. A regra de alcance é a do terminal:
+só a pasta, a não ser com `include_subdirs`; a mais funda vence. 6 testes novos
+(51 no total).
+
+_Estado: conferido a olho na lista e na barra lateral com o binário do branch.
+**Falta:** merge no `master` (que tem trabalho não commitado de outra frente),
+instalar, e ver a atualização ao vivo ao mudar uma cor no terminal._
+
 ### 📋 Planejado / a validar
 - Validar em uso real; ajustar tamanhos/posições conforme feedback.
 - Árvore: testar com pasta muito grande (o `column_sort` roda por frame).
