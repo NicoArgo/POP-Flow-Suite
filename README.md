@@ -67,15 +67,34 @@ Cada componente tem seu próprio `README` e (quando aplicável) `install.sh` /
 
 ## Instalar
 
-**Tudo de uma vez** (recomendado) — compila e instala todos os componentes com
-uma só senha de `sudo`. Rode em um terminal real:
+**Tudo de uma vez** (recomendado), num Pop!_OS com COSMIC. Rode em um terminal
+real — pede a senha de `sudo` uma vez só:
 
 ```bash
+git clone https://github.com/NicoArgo/POP-Flow-Suite.git
+cd POP-Flow-Suite
 ./install-all.sh
 ```
 
-Ao final: o **launcher** (Alt+Tab) já fica ativo; o **gerenciador de arquivos** é
-reiniciado (isso fecha as janelas abertas dele — reabra depois).
+O script:
+
+1. confere a versão do COSMIC (testado na **1.0.7**; em outra, pergunta antes
+   de seguir — `POP_FLOW_YES=1` pula a pergunta);
+2. instala as dependências de compilação que faltarem (inclusive Rust, se não
+   houver nenhum);
+3. **clona os componentes** que ainda não estão na pasta — cada um mora no seu
+   repo (tabela acima); os que já estão são usados como estão;
+4. compila e instala cada um.
+
+Ao final: o **launcher** (Alt+Tab) e o **triângulo** do canto inferior direito já
+funcionam; o **gerenciador de arquivos** é reiniciado (isso fecha as janelas
+abertas dele — reabra depois). Duas coisas você liga à mão:
+
+- **Botões no painel** (Imagens, Downloads, mostrar área de trabalho):
+  *Configurações → Área de trabalho → Painel → Configurar applets*.
+- **Aparência por pasta** no terminal: abra um terminal **novo** e crie uma
+  regra para uma pasta; o gerenciador de arquivos passa a mostrar a pasta na cor
+  da regra.
 
 O script também instala, para cada componente, um hook de APT que **reaplica** a
 build do POP Flow depois de um update de pacote — sem isso, um `apt upgrade`
