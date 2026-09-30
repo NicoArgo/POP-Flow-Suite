@@ -161,7 +161,7 @@ olho; ao vivo também: uma regra adicionada no `dir_rules` pintou a pasta em ~3s
 com a janela aberta, e removê-la devolveu o cinza. No `master` junto com a
 visão por pasta (`bd62b04`)._
 
-### 🚧 Feito, aguardando instalação — **área de trabalho livre: arrastar para qualquer célula, com scroll** (30/9)
+### ✅ Feito e validado — **área de trabalho livre: arrastar para qualquer célula, com scroll** (30/9)
 Cada ícone do desktop tem uma célula própria. Arrastar ícones e soltar no
 próprio desktop — antes um no-op ("already in target directory") — agora os
 move para a célula mais próxima da imagem de arrasto (snap leve). Um grupo
@@ -173,6 +173,9 @@ rolar. O papel de parede não se mexe (é outra camada, cosmic-bg).
 - Ícones nunca posicionados ocupam a primeira célula livre na ordem antiga
   (descendo `columns` colunas, padrão 4, uma tela por vez) — o desktop só muda
   no primeiro arrasto. No primeiro arrasto, o layout inteiro é congelado.
+- A barra de rolagem padrão (trilho escuro + alça cinza) some no desktop; no
+  lugar, uma barrinha de 4 px na cor de destaque, só quando há o que rolar
+  (`224eea6`). É só indicador — o libcosmic não deixa recolorir a nativa.
 - Regras puras em `desktop_layout.rs` (11 testes).
 - **Descoberta:** o desktop é outro binário, `cosmic-files-applet`, e ele
   **nunca foi instalado pelo fork** — rodava o de fábrica. `install.sh`,
