@@ -161,6 +161,18 @@ olho; ao vivo também: uma regra adicionada no `dir_rules` pintou a pasta em ~3s
 com a janela aberta, e removê-la devolveu o cinza. No `master` junto com a
 visão por pasta (`bd62b04`)._
 
+### 🚧 Feito, aguardando instalação — **área de trabalho com colunas fixas e scroll** (30/9)
+Os ícones ficam em `columns` colunas à esquerda (padrão 4), cada uma cheia de
+cima para baixo. Enquanto cabem, o layout é idêntico ao do upstream. Passou da
+tela, as colunas crescem por igual para baixo e o desktop rola — em vez de se
+espalhar sobre o papel de parede. O papel de parede não se mexe: é outra camada
+(cosmic-bg). `columns: 0` devolve o layout do upstream. Regra pura em
+`desktop_column_position`, com testes.
+- Config: `columns` em `~/.config/cosmic/com.system76.CosmicFiles/v1/desktop`.
+- **Descoberta:** o desktop é outro binário, `cosmic-files-applet`, e ele
+  **nunca foi instalado pelo fork** — rodava o de fábrica, sem nenhuma melhoria
+  do Files. `install.sh`, `uninstall.sh` e o auto-reapply agora cobrem os dois.
+
 ### 📋 Planejado / a validar
 - Validar em uso real; ajustar tamanhos/posições conforme feedback.
 - Árvore: testar com pasta muito grande (o `column_sort` roda por frame).
@@ -279,6 +291,16 @@ Instala em `/usr/local/share/applications` (software novo, sem auto-reapply,
 nenhum binário a compilar). Diferente do show-desktop, estes **foram**
 adicionados à ala esquerda do painel — foi o pedido; o `plugins_wings` anterior
 está em `plugins_wings.bak-popflow`.
+
+### 🚧 Feito, aguardando instalação — **triângulo "mostrar área de trabalho" no canto** (30/9)
+`cosmic-show-desktop-corner`: um triângulo no canto inferior esquerdo que roda
+`cosmic-applet-show-desktop --toggle` — o mesmo estado do botão do painel, então
+dá para esconder por um e trazer de volta pelo outro. Discreto em repouso (12 px,
+cor de destaque clareada), cresce no hover; todo o triângulo de 28 px é clicável
+(região de entrada em escada), o resto do canto deixa o clique passar. Camada
+Top: acima das janelas, abaixo de tela cheia. sctk + shm puro, sem GPU:
+~2,5 MiB. Segue a cor de destaque (inclusive a do cosmic-wallsync). Roda como
+serviço systemd de usuário; entra no `install.sh` do cosmic-applets.
 
 ### 📋 Planejado — gestos de touchpad (G3+)
 Depende de resolver o `cosmic-comp` antes (HEAD destacado + base de fevereiro).
