@@ -176,6 +176,7 @@ rolar. O papel de parede não se mexe (é outra camada, cosmic-bg).
 - A barra de rolagem padrão (trilho escuro + alça cinza) some no desktop; no
   lugar, uma barrinha de 4 px na cor de destaque, só quando há o que rolar
   (`224eea6`). É só indicador — o libcosmic não deixa recolorir a nativa.
+- Nomes com até duas linhas em repouso; três no hover ou seleção (`da0f77c`).
 - Regras puras em `desktop_layout.rs` (11 testes).
 - **Descoberta:** o desktop é outro binário, `cosmic-files-applet`, e ele
   **nunca foi instalado pelo fork** — rodava o de fábrica. `install.sh`,
