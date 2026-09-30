@@ -161,17 +161,23 @@ olho; ao vivo também: uma regra adicionada no `dir_rules` pintou a pasta em ~3s
 com a janela aberta, e removê-la devolveu o cinza. No `master` junto com a
 visão por pasta (`bd62b04`)._
 
-### 🚧 Feito, aguardando instalação — **área de trabalho com colunas fixas e scroll** (30/9)
-Os ícones ficam em `columns` colunas à esquerda (padrão 4), cada uma cheia de
-cima para baixo. Enquanto cabem, o layout é idêntico ao do upstream. Passou da
-tela, as colunas crescem por igual para baixo e o desktop rola — em vez de se
-espalhar sobre o papel de parede. O papel de parede não se mexe: é outra camada
-(cosmic-bg). `columns: 0` devolve o layout do upstream. Regra pura em
-`desktop_column_position`, com testes.
-- Config: `columns` em `~/.config/cosmic/com.system76.CosmicFiles/v1/desktop`.
+### 🚧 Feito, aguardando instalação — **área de trabalho livre: arrastar para qualquer célula, com scroll** (30/9)
+Cada ícone do desktop tem uma célula própria. Arrastar ícones e soltar no
+próprio desktop — antes um no-op ("already in target directory") — agora os
+move para a célula mais próxima da imagem de arrasto (snap leve). Um grupo
+mantém o formato; cair em cima de outro ícone manda para a célula livre mais
+próxima. As linhas não têm limite abaixo da tela: durante o arrasto sobra uma
+linha vazia sob o último ícone e a borda rola, então soltar ali faz o desktop
+rolar. O papel de parede não se mexe (é outra camada, cosmic-bg).
+- Posições por monitor em `~/.local/state/cosmic-files/desktop-positions.ron`.
+- Ícones nunca posicionados ocupam a primeira célula livre na ordem antiga
+  (descendo `columns` colunas, padrão 4, uma tela por vez) — o desktop só muda
+  no primeiro arrasto. No primeiro arrasto, o layout inteiro é congelado.
+- Regras puras em `desktop_layout.rs` (11 testes).
 - **Descoberta:** o desktop é outro binário, `cosmic-files-applet`, e ele
-  **nunca foi instalado pelo fork** — rodava o de fábrica, sem nenhuma melhoria
-  do Files. `install.sh`, `uninstall.sh` e o auto-reapply agora cobrem os dois.
+  **nunca foi instalado pelo fork** — rodava o de fábrica. `install.sh`,
+  `uninstall.sh` e o auto-reapply agora cobrem os dois (e reiniciam o desktop
+  com `pkill -f`: o `-x` nunca casava, o nome do processo é truncado em 15).
 
 ### 📋 Planejado / a validar
 - Validar em uso real; ajustar tamanhos/posições conforme feedback.
