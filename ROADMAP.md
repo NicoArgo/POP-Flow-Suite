@@ -298,7 +298,7 @@ nenhum binário a compilar). Diferente do show-desktop, estes **foram**
 adicionados à ala esquerda do painel — foi o pedido; o `plugins_wings` anterior
 está em `plugins_wings.bak-popflow`.
 
-### 🚧 Feito, aguardando instalação — **triângulo "mostrar área de trabalho" no canto** (30/9)
+### ✅ Feito e validado — **triângulo "mostrar área de trabalho" no canto** (30/9)
 `cosmic-show-desktop-corner`: um triângulo no canto **inferior direito** que
 roda `cosmic-applet-show-desktop --toggle` — o mesmo estado do botão do painel.
 Discreto em repouso (12 px, destaque clareado), cresce no hover; todo o
@@ -315,7 +315,7 @@ não faziam nada (achado pelos 12 processos presos, um por clique). Agora o
 toggle espera a lista assentar (150 ms sem mudança, prazo real por polling),
 fecha o canal e age sobre a lista **completa** — a primeira só tinha uma janela.
 
-### 🚧 Feito, aguardando instalação — **botões de pasta trazem a janela aberta** (30/9)
+### ✅ Feito e validado — **botões de pasta trazem a janela aberta** (30/9)
 Imagens e Downloads eram `cosmic-panel-button`, que só roda um comando: cada
 clique abria outra janela. Agora são um applet nosso
 (`cosmic-applet-folder-button pictures|downloads`) que acompanha as janelas: o
@@ -324,6 +324,9 @@ para a área de trabalho dela) e só abre uma nova se não houver. Com a janela
 aberta, o nome fica na cor de destaque. Casa pelo título "‹pasta› — …" + app id
 (seguro: a única ação é trazer para frente). Mesmos ids de entrada: os botões já
 no painel passam a usar o applet sem reconfigurar.
+- Primeira instalação não pegou: cópias de teste antigas em
+  `~/.local/share/applications` têm prioridade e mantinham o botão velho. O
+  `install.sh` agora as move para `~/.local/state/pop-flow/old-desktop-entries`.
 
 ### 📋 Planejado — gestos de touchpad (G3+)
 Depende de resolver o `cosmic-comp` antes (HEAD destacado + base de fevereiro).
