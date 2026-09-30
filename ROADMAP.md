@@ -446,6 +446,38 @@ gerenciado pela sessão, então matá-lo fecharia as janelas abertas do usuário
 
 ---
 
+## Tema do papel de parede — `cosmic-wallsync/` (`NicoArgo/cosmic-wallsync`)
+
+Componente próprio (não é fork): um binário de usuário + serviço systemd
+`--user`. Não substitui nada do sistema, então dispensa `sudo`, `.orig` e hook
+de APT — um update de pacote não tem o que reverter.
+
+### ✅ Feito — **v1: o tema segue o papel de parede** (29/9)
+- Destaque = o grupo mais colorido com ≥ 1% da imagem (k-means em Oklab), com
+  luminosidade presa numa faixa legível por modo e croma dentro do sRGB. Fundo
+  com um sopro do matiz da imagem; texto com o matiz do destaque. Papel de
+  parede cinza não mexe no destaque.
+- Grava como o *Configurações → Aparência*: só `accent`/`bg_color`/`text_tint`
+  no builder, reconstrói o `Theme` e atualiza o CSS do GTK. Claro e escuro.
+- `watch` reage à troca de papel de parede em < 1 s (testado ao vivo: gato na
+  colina → azul `#5994e1`, auroras → roxo `#a27bdb`).
+- `restore` devolve o tema de antes — verificado idêntico (builder byte a byte;
+  tema derivado salvo arredondamento na 7ª casa).
+- **Descoberta:** o sistema lê a config de tema `v1`; o libcosmic de 2026-07 em
+  diante (usado pelos nossos forks) grava `v2`. Os forks leem `v1` como fallback
+  enquanto `v2` estiver vazio — por isso o wallsync fica fixado na revisão do
+  `cosmic-settings` 1.0.7 e grava só `v1`. Se algum fork um dia gravar tema em
+  `v2`, ele passa a ignorar mudanças feitas pelo sistema.
+
+### 💡 Ideias
+- Slideshow: seguir a imagem da vez (o cosmic-bg não publica qual é; exigiria
+  patch nele ou replicar a ordem de rotação).
+- Um tema por monitor quando os papéis de parede diferem.
+- Levar o destaque ao terminal: hoje a cor por pasta do `cosmic-term` sobrepõe
+  o destaque na faixa do topo.
+
+---
+
 ## Referências (não modificadas)
 
 - (nenhuma no momento — os clones de referência viraram componentes ativos.)

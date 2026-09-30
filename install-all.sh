@@ -47,6 +47,17 @@ done
 #    binary. THIS CLOSES ANY OPEN FILE-MANAGER WINDOWS — reopen it afterwards.
 #  - cosmic-term is deliberately NOT killed: this script is running inside one,
 #    and killing it would close the user's shells mid-install.
+# User-level components: no system binary replaced, so no sudo and no APT hook.
+for comp in cosmic-wallsync; do
+    if [ -x "$comp/install.sh" ]; then
+        echo
+        echo "=================================================================="
+        echo "==> $comp (usuário)"
+        echo "=================================================================="
+        ( cd "$comp" && ./install.sh )
+    fi
+done
+
 echo
 echo "==> Reloading cosmic-files (this closes its open windows)..."
 pkill -x cosmic-files 2>/dev/null || true

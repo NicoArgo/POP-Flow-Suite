@@ -24,6 +24,7 @@ para o dia a dia — sem abandonar a estética e a base do COSMIC.
 | **Compositor** (`cosmic-comp/`) | `NicoArgo/cosmic-comp` (fork) | Gestos de três dedos (janela, overview, mostrar área de trabalho) | 🟡 pronto, **não instalado** (⚠ é o compositor) |
 | **Barra de tarefas** (`cosmic-applets/`) | `NicoArgo/cosmic-applets` (fork) | Preview de janela no hover + applet "mostrar área de trabalho" | 🟢 v1 + G2 |
 | **Terminal** (`cosmic-term/`) | `NicoArgo/cosmic-term` (fork) | Identidade por pasta: um nome e **uma cor** que pintam a aba, o acento da janela, a faixa do topo, o cursor e a statusline do Claude | 🟢 T1 + T2 |
+| **Tema do papel de parede** (`cosmic-wallsync/`) | `NicoArgo/cosmic-wallsync` (próprio) | Destaque, fundo e texto do tema derivados do papel de parede, nos modos claro e escuro; reaplica a cada troca | 🟢 instalado |
 
 Veja o estado detalhado e o que vem a seguir em **[ROADMAP.md](ROADMAP.md)**.
 
@@ -57,6 +58,7 @@ Pop Flow/                      ← este workspace (o guarda-chuva da suíte)
 ├── cosmic-applets/            ← fork: NicoArgo/cosmic-applets
 ├── cosmic-term/               ← fork: NicoArgo/cosmic-term
 ├── cosmic-comp/               ← fork: NicoArgo/cosmic-comp  (o compositor)
+├── cosmic-wallsync/           ← próprio: NicoArgo/cosmic-wallsync (tema ← papel de parede)
 └── cosmic-workspaces-epoch/   ← clone de referência (upstream)
 ```
 
