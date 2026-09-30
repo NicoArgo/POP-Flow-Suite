@@ -269,7 +269,7 @@ usar: *Configurações → Área de trabalho → Painel → Configurar applets*.
 
 Plano completo em [PLAN-gestos-e-mostrar-area.md](PLAN-gestos-e-mostrar-area.md).
 
-### ✅ Feito — **botões de pasta (Imagens e Downloads)**
+### ✅ Feito — **botões de pasta (Imagens e Downloads)** — v1, substituída acima
 Um clique abre a pasta no `cosmic-files`. **Sem código nosso**: o
 `cosmic-panel-button`, que já vem neste mesmo pacote, desenha um botão a partir
 de uma entrada `.desktop` e roda o `Exec` dela ao ser pressionado — é assim que
@@ -299,14 +299,31 @@ adicionados à ala esquerda do painel — foi o pedido; o `plugins_wings` anteri
 está em `plugins_wings.bak-popflow`.
 
 ### 🚧 Feito, aguardando instalação — **triângulo "mostrar área de trabalho" no canto** (30/9)
-`cosmic-show-desktop-corner`: um triângulo no canto inferior esquerdo que roda
-`cosmic-applet-show-desktop --toggle` — o mesmo estado do botão do painel, então
-dá para esconder por um e trazer de volta pelo outro. Discreto em repouso (12 px,
-cor de destaque clareada), cresce no hover; todo o triângulo de 28 px é clicável
-(região de entrada em escada), o resto do canto deixa o clique passar. Camada
-Top: acima das janelas, abaixo de tela cheia. sctk + shm puro, sem GPU:
-~2,5 MiB. Segue a cor de destaque (inclusive a do cosmic-wallsync). Roda como
-serviço systemd de usuário; entra no `install.sh` do cosmic-applets.
+`cosmic-show-desktop-corner`: um triângulo no canto **inferior direito** que
+roda `cosmic-applet-show-desktop --toggle` — o mesmo estado do botão do painel.
+Discreto em repouso (12 px, destaque clareado), cresce no hover; todo o
+triângulo de 28 px é clicável (região de entrada em escada). Camada Top: acima
+das janelas, abaixo de tela cheia. sctk + shm puro, ~2,5 MiB. Serviço systemd
+de usuário.
+
+### ✅ Corrigido — **`--toggle` travava e nunca minimizava nada** (`a5667103`)
+O toggle lia só a primeira lista de janelas e parava de ler. A thread Wayland
+manda uma lista por janela descoberta, encheu o canal (capacidade 4), travou no
+`send` — antes de executar os pedidos de minimizar — e o `join()` esperou para
+sempre. Com mais de 4 janelas, todo toggle travava: o canto, o gesto e o atalho
+não faziam nada (achado pelos 12 processos presos, um por clique). Agora o
+toggle espera a lista assentar (150 ms sem mudança, prazo real por polling),
+fecha o canal e age sobre a lista **completa** — a primeira só tinha uma janela.
+
+### 🚧 Feito, aguardando instalação — **botões de pasta trazem a janela aberta** (30/9)
+Imagens e Downloads eram `cosmic-panel-button`, que só roda um comando: cada
+clique abria outra janela. Agora são um applet nosso
+(`cosmic-applet-folder-button pictures|downloads`) que acompanha as janelas: o
+clique traz para frente uma janela do Files já nessa pasta (desminimiza, ou vai
+para a área de trabalho dela) e só abre uma nova se não houver. Com a janela
+aberta, o nome fica na cor de destaque. Casa pelo título "‹pasta› — …" + app id
+(seguro: a única ação é trazer para frente). Mesmos ids de entrada: os botões já
+no painel passam a usar o applet sem reconfigurar.
 
 ### 📋 Planejado — gestos de touchpad (G3+)
 Depende de resolver o `cosmic-comp` antes (HEAD destacado + base de fevereiro).
