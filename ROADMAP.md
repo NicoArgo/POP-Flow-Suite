@@ -179,6 +179,8 @@ rolar. O papel de parede não se mexe (é outra camada, cosmic-bg).
 - Nomes em até duas linhas, e a célula reserva só duas (linhas mais próximas);
   o nome completo fica no tooltip. Sem bloco escuro em repouso: texto branco com
   sombra desenhada; o bloco volta no hover/seleção (`8a0edde`).
+- Ícone cresce no hover (1,15× em 120 ms); a célula reserva o tamanho crescido
+  para nada se mexer (`d5dbf0b`).
 - Regras puras em `desktop_layout.rs` (11 testes).
 - **Descoberta:** o desktop é outro binário, `cosmic-files-applet`, e ele
   **nunca foi instalado pelo fork** — rodava o de fábrica. `install.sh`,
@@ -330,6 +332,12 @@ para a área de trabalho dela) e só abre uma nova se não houver. Com a janela
 aberta, o nome fica na cor de destaque. Casa pelo título "‹pasta› — …" + app id
 (seguro: a única ação é trazer para frente). Mesmos ids de entrada: os botões já
 no painel passam a usar o applet sem reconfigurar.
+- Viraram **ícones** (a pasta aberta pinta o ícone na cor de destaque), e os três
+  botões do painel — Imagens, Downloads, mostrar área de trabalho — **crescem no
+  hover** (1,25× em 120 ms) em vez de tooltip (`cbffe575`, `f828820a`,
+  `1fcddea6`). O hover vem dos eventos da própria superfície: a `mouse_area`
+  nunca via a saída (o botão ocupa a superfície toda), ficava "em cima" e o
+  efeito funcionava uma vez só (`a74aa75f`).
 - Primeira instalação não pegou: cópias de teste antigas em
   `~/.local/share/applications` têm prioridade e mantinham o botão velho. O
   `install.sh` agora as move para `~/.local/state/pop-flow/old-desktop-entries`.
