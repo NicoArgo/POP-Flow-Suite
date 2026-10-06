@@ -161,6 +161,23 @@ olho; ao vivo também: uma regra adicionada no `dir_rules` pintou a pasta em ~3s
 com a janela aberta, e removê-la devolveu o cinza. No `master` junto com a
 visão por pasta (`bd62b04`)._
 
+### ✅ Feito — **"Regra da pasta..." no botão direito** (06/10)
+Logo abaixo de *Renomear*, no menu de uma pasta (lista, grade e área de
+trabalho): um diálogo com **nome**, **cor** (12 amostras ou hex) e *aplicar
+também às subpastas*, com prévia da pasta já colorida. Se a pasta já tem regra,
+o diálogo vem preenchido e oferece *Remover regra*. Não precisa abrir o
+terminal.
+
+Quem grava é o próprio terminal: o Files chama `cosmic-term --set-rule` /
+`--remove-rule` (novos no `cosmic-term`, `4edd77b`), e o observador de config
+repinta a pasta. Assim só o terminal conhece o formato da regra, e uma regra
+existente mantém o que o diálogo não mostra (opacidade, temas). O item só
+aparece se o `cosmic-term` instalado tiver `--set-rule` — o de fábrica abriria
+uma janela. Commit `c3271ae`.
+
+_Estado: compilado e testado (67 + 57 testes; CLI exercitada numa cópia da
+config). **Falta instalar** os dois e olhar o diálogo._
+
 ### ✅ Feito e validado — **área de trabalho livre: arrastar para qualquer célula, com scroll** (30/9)
 Cada ícone do desktop tem uma célula própria. Arrastar ícones e soltar no
 próprio desktop — antes um no-op ("already in target directory") — agora os
