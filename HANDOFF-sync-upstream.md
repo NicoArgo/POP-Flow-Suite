@@ -27,7 +27,7 @@ agora avisam quando não há hook, em vez de ficarem em silêncio.
 Os hooks **ainda não existem na máquina**. Rode:
 
 ```bash
-cd "Área de trabalho/Apps Workspace/Pop Flow"
+cd "Área de trabalho/Pop Flow"
 (cd cosmic-files   && ./setup-auto-reapply.sh)
 (cd cosmic-applets && ./setup-auto-reapply.sh)
 ```

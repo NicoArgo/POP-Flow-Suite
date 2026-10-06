@@ -156,7 +156,7 @@ Se quiser cortar o problema pela raiz enquanto não há correção, dá para vol
 ao applet de fábrica:
 
 ```bash
-cd "Área de trabalho/Apps Workspace/Pop Flow/cosmic-applets" && ./uninstall.sh
+cd "Área de trabalho/Pop Flow/cosmic-applets" && ./uninstall.sh
 ```
 
 Isso remove o preview no hover junto — é a troca.
