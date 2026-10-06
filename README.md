@@ -16,15 +16,17 @@ para o dia a dia — sem abandonar a estética e a base do COSMIC.
 
 ## Componentes
 
-| Componente | Repo (fork na conta) | Papel | Status |
-|---|---|---|---|
-| **Launcher** (`cosmic-launcher/`) | [`NicoArgo/POP-Flow`](https://github.com/NicoArgo/POP-Flow) | Alt+Tab com grade de miniaturas ao vivo, fechar janela, menu de contexto rico | 🟢 ativo, instalado |
-| **Files** (`cosmic-files/`) | `NicoArgo/cosmic-files` (fork) | Gerenciador de arquivos — preview ampliado no hover, pastas expansíveis na lista e na barra lateral, abrir no terminal | 🟢 em uso |
-| **Overview** (`cosmic-workspaces-epoch/`) | `NicoArgo/cosmic-workspaces-epoch` (fork) | Tela do Super (Task-View) — portar X de fechar / grade / preview | 🟡 iniciando |
-| **Compositor** (`cosmic-comp/`) | `NicoArgo/cosmic-comp` (fork) | Gestos de três dedos (janela, overview, mostrar área de trabalho) | 🟡 pronto, **não instalado** (⚠ é o compositor) |
-| **Barra de tarefas** (`cosmic-applets/`) | `NicoArgo/cosmic-applets` (fork) | Preview de janela no hover + applet "mostrar área de trabalho" | 🟢 v1 + G2 |
-| **Terminal** (`cosmic-term/`) | `NicoArgo/cosmic-term` (fork) | Identidade por pasta: um nome e **uma cor** que pintam a aba, o acento da janela, a faixa do topo, o cursor e a statusline do Claude | 🟢 T1 + T2 |
-| **Tema do papel de parede** (`cosmic-wallsync/`) | `NicoArgo/cosmic-wallsync` (próprio) | Destaque, fundo e texto do tema derivados do papel de parede, nos modos claro e escuro; reaplica a cada troca | 🟢 instalado |
+| Componente | Repo | O que traz |
+|---|---|---|
+| **Alt+Tab** (`cosmic-launcher/`) | [`NicoArgo/POP-Flow`](https://github.com/NicoArgo/POP-Flow) | Grade de miniaturas ao vivo que sempre cabe na tela, janela em foco ampliada (peek), X para fechar, posições fixas, menu de contexto com *Abrir no terminal / Abrir pasta / Copiar caminho* |
+| **Files** (`cosmic-files/`) | [`NicoArgo/cosmic-files`](https://github.com/NicoArgo/cosmic-files) | Prévia ampliada no hover, pastas expansíveis (lista e barra lateral), cada pasta lembra lista/grade, **pastas na cor da regra**, *Regra da pasta…* no botão direito, *Copiar caminho* sempre visível, área de trabalho livre (arrastar para qualquer célula, rolagem) |
+| **Painel** (`cosmic-applets/`) | [`NicoArgo/cosmic-applets`](https://github.com/NicoArgo/cosmic-applets) | Prévia da janela no hover da barra de tarefas; **mostrar área de trabalho** por tela (botão, Super+D, triângulo no canto por clique ou hover); botões Imagens/Downloads; **modo vampiro** (o PC só dorme quando você manda; 1 h / 3 h; aviso ao fechar a tampa); cantos ativos configuráveis |
+| **Terminal** (`cosmic-term/`) | [`NicoArgo/cosmic-term`](https://github.com/NicoArgo/cosmic-term) | Identidade por pasta: nome e **uma cor** na aba, no acento, na faixa do topo e no cursor; `--set-rule` / `--remove-rule` para outros apps |
+| **Histórico da área de transferência** (`cosmic-clipboard-history/`) | [`NicoArgo/cosmic-clipboard-history`](https://github.com/NicoArgo/cosmic-clipboard-history) | **Super+V**: lista o que você copiou (texto), filtra, Enter devolve — sem sudo |
+| **Tema do papel de parede** (`cosmic-wallsync/`) | [`NicoArgo/cosmic-wallsync`](https://github.com/NicoArgo/cosmic-wallsync) | Acento, fundo e texto do tema seguem o papel de parede |
+| **Overview** (`cosmic-workspaces-epoch/`) — opcional | [`NicoArgo/cosmic-workspaces-epoch`](https://github.com/NicoArgo/cosmic-workspaces-epoch) | X ao passar o mouse em cada janela da tela do Super. Exige COSMIC atualizado (o instalador confere) |
+| **Configurações** (`cosmic-settings/`) — opcional | [`NicoArgo/cosmic-settings`](https://github.com/NicoArgo/cosmic-settings) (branch `pop-flow`) | *Telas → Mostrar área de trabalho*: só a tela onde foi acionado / todas. Precisa de `libpipewire-0.3-dev` e `libclang-dev` para compilar |
+| **Compositor** (`cosmic-comp/`) — opcional | [`NicoArgo/cosmic-comp`](https://github.com/NicoArgo/cosmic-comp) | Gestos de três dedos. ⚠ É o compositor: pede `yes`, vale no próximo login |
 
 Veja o estado detalhado e o que vem a seguir em **[ROADMAP.md](ROADMAP.md)**.
 
@@ -59,7 +61,11 @@ Pop Flow/                      ← este workspace (o guarda-chuva da suíte)
 ├── cosmic-term/               ← fork: NicoArgo/cosmic-term
 ├── cosmic-comp/               ← fork: NicoArgo/cosmic-comp  (o compositor)
 ├── cosmic-wallsync/           ← próprio: NicoArgo/cosmic-wallsync (tema ← papel de parede)
-└── cosmic-workspaces-epoch/   ← clone de referência (upstream)
+├── cosmic-clipboard-history/  ← próprio: NicoArgo/cosmic-clipboard-history (Super+V)
+├── cosmic-workspaces-epoch/   ← fork: NicoArgo/cosmic-workspaces-epoch (Overview)
+├── cosmic-settings/           ← fork: NicoArgo/cosmic-settings (branch pop-flow)
+├── install-all.sh             ← instala tudo
+└── setup-desktop.sh           ← põe os botões no painel e os atalhos (Super+D, Super+V)
 ```
 
 Cada componente tem seu próprio `README` e (quando aplicável) `install.sh` /
@@ -92,10 +98,14 @@ O script:
 
 Ao final: o **launcher** (Alt+Tab) e o **triângulo** do canto inferior direito já
 funcionam; o **gerenciador de arquivos** é reiniciado (isso fecha as janelas
-abertas dele — reabra depois). Duas coisas você liga à mão:
+abertas dele — reabra depois). No fim ele roda o **`setup-desktop.sh`**
+(pergunta antes): põe os botões no painel — mostrar área de trabalho, Imagens,
+Downloads e o modo vampiro — e cria os atalhos **Super+D** (área de trabalho)
+e **Super+V** (histórico). Faz backup do que muda, não duplica nada se rodar de
+novo e não toma uma tecla que já esteja em uso. Pode ser rodado sozinho.
 
-- **Botões no painel** (Imagens, Downloads, mostrar área de trabalho):
-  *Configurações → Área de trabalho → Painel → Configurar applets*.
+O **modo vampiro** vem desligado: clique no morcego/lua no painel para escolher.
+
 - **Aparência por pasta** no terminal: abra um terminal **novo** e crie uma
   regra para uma pasta; o gerenciador de arquivos passa a mostrar a pasta na cor
   da regra.

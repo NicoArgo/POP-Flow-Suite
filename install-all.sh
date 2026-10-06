@@ -199,6 +199,19 @@ for entry in "${USER_REPOS[@]}"; do
     ( cd "$comp" && ./install.sh )
 done
 
+# --- 7b. Panel buttons and shortcuts -------------------------------------------
+# The only step that edits your desktop configuration, so it asks (default yes).
+banner "Panel buttons and shortcuts"
+answer=y
+if [ "${POP_FLOW_YES:-}" != 1 ]; then
+    read -r -p "   Add the POP Flow buttons to the panel and bind Super+D / Super+V? [Y/n] " answer
+fi
+if [[ ! "$answer" =~ ^[nN] ]]; then
+    ./setup-desktop.sh || echo "!! setup-desktop.sh failed — the components are installed anyway"
+else
+    echo "    skipped; run ./setup-desktop.sh any time"
+fi
+
 # --- 8. Reload ----------------------------------------------------------------
 # - cosmic-launcher and the desktop icons were restarted by their installers
 #   (COSMIC respawns them; no app window is closed).
@@ -210,12 +223,12 @@ pkill -x cosmic-files 2>/dev/null || true
 
 say "POP Flow installed."
 cat <<'EOF'
-    Alt+Tab is live now; so is the show-desktop triangle (bottom-right corner).
+    Alt+Tab is live now; so is the show-desktop triangle in the bottom-right
+    corner of every screen (click it, or rest the pointer on it).
 
-    Two things you turn on yourself:
-    - Panel buttons (Pictures, Downloads, show desktop): Settings -> Desktop ->
-      Panel -> Configure panel applets. They aren't added automatically,
-      because that would mean rewriting your panel configuration.
+    Vampire mode (bat/moon in the panel) starts OFF; click it to choose.
+
+    One thing you do yourself:
     - Per-folder look in the terminal: open a NEW terminal window (this one
       still runs the old binary) and create a rule for a folder; the file
       manager then shows that folder in the rule's color.
