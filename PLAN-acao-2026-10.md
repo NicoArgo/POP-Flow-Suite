@@ -1,5 +1,8 @@
 # Plano de ação — outubro de 2026
 
+> **Atualização 06/10, fim do dia:** tudo das seções 2 e 3 foi implementado e
+> está no GitHub (ver "Rodada 2" no fim). Falta **instalar e olhar na tela**.
+
 Estado em 06/10/2026. Legenda: ✅ feito nesta rodada · 🔧 falta só instalar/validar ·
 📋 próximo · 💡 oportunidade.
 
@@ -90,3 +93,27 @@ Ordem = ganho no dia a dia ÷ esforço.
 3. Oportunidades 1, 2, 3 e 7 (baixas, mesmo dia).
 4. P4 — X no Overview.
 5. P6/P7 — testes de carga e ajuste fino.
+
+---
+
+## Rodada 2 — tudo implementado (06/10)
+
+| Item | Componente | Commits | Para valer |
+|------|-----------|---------|-----------|
+| Regra da pasta na barra lateral | cosmic-files | `59b9cad` | `cosmic-files/install.sh` |
+| "Copiar caminho" sempre visível | cosmic-files | `8844e45` | idem |
+| Pastas coloridas ao vivo no seletor Abrir/Salvar | cosmic-files | `84d3262` | idem |
+| Árvore: ordem em cache (10 mil itens: 5 ms → 0,6 ms por quadro) | cosmic-files | `3ac4a14` | idem |
+| Vampiro temporário 1 h / 3 h (botão direito no morcego; `--for <min>`) | cosmic-applets | `e8b7cdaa` | `cosmic-applets/install.sh` |
+| Aviso "tampa fechada, PC acordado" (uma vez por fechamento) | cosmic-applets | `8d354f6d` | idem |
+| Cantos configuráveis + canto superior esquerdo → Overview (desligado por padrão) | cosmic-applets | `c5bd62cc` | idem + `systemctl --user enable --now cosmic-overview-corner` |
+| Alt+Tab: regras de tamanho (mín. 120×70, máx. 264×156, paginação "+N") | cosmic-launcher | `f862776` | `cosmic-launcher/install.sh` |
+| Alt+Tab: peek 1,2× na janela em foco | cosmic-launcher | `f7adf38` | idem |
+| Overview: X ao passar o mouse em cada janela | cosmic-workspaces-epoch | `4524bb8`, `0b35b92` | **antes**: `sudo apt full-upgrade` (o pacote instalado é 0.1.0, o fork é 1.0.12; o instalador recusa) |
+| Histórico da área de transferência (Super+V) | cosmic-clipboard-history (novo, privado) | `b9d8178` | `cosmic-clipboard-history/install.sh` (sem sudo) + atalho Super+V |
+
+Histórico da área de transferência: um serviço de usuário grava o que é
+copiado (só texto, 200 itens, ignora senhas marcadas por gerenciadores) e um
+plugin do pop-launcher lista: **Super+V** abre o launcher com `cb ` digitado,
+Enter devolve o texto, Ctrl+V cola. O applet Flatpak de clipboard que estava
+instalado nunca funcionou (sandbox sem acesso ao protocolo) — pode remover.

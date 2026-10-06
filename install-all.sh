@@ -28,6 +28,12 @@ REPOS=(
     "cosmic-applets|https://github.com/NicoArgo/cosmic-applets.git"
     "cosmic-term|https://github.com/NicoArgo/cosmic-term.git"
 )
+# Optional system components: a refusal from their own install.sh (e.g. the
+# installed COSMIC is older than the fork — the overview checks this) skips
+# them with a note instead of stopping the whole run.
+OPTIONAL_REPOS=(
+    "cosmic-workspaces-epoch|https://github.com/NicoArgo/cosmic-workspaces-epoch.git"
+)
 # The compositor: installed last, and only after its own "type yes" prompt —
 # a bad build here costs the session, not just one app. Takes effect at the
 # next login; refusing it skips it without failing the rest of the install.
@@ -37,6 +43,7 @@ COMP_REPOS=(
 # Installed per user (no system binary replaced, so no sudo and no APT hook).
 USER_REPOS=(
     "cosmic-wallsync|https://github.com/NicoArgo/cosmic-wallsync.git"
+    "cosmic-clipboard-history|https://github.com/NicoArgo/cosmic-clipboard-history.git"
 )
 
 # Build dependencies: what a machine that builds every component here has
@@ -123,7 +130,7 @@ fetch() {
     fi
 }
 say "Components"
-for entry in "${REPOS[@]}" "${COMP_REPOS[@]}" "${USER_REPOS[@]}"; do
+for entry in "${REPOS[@]}" "${OPTIONAL_REPOS[@]}" "${COMP_REPOS[@]}" "${USER_REPOS[@]}"; do
     fetch "${entry%%|*}" "${entry#*|}" || true
 done
 
@@ -142,6 +149,20 @@ for entry in "${REPOS[@]}"; do
         ( cd "$comp" && ./setup-auto-reapply.sh )
     else
         echo "!! $comp has no setup-auto-reapply.sh — a package update will revert it"
+    fi
+done
+
+# --- 5b. Optional system components -------------------------------------------
+for entry in "${OPTIONAL_REPOS[@]}"; do
+    comp=${entry%%|*}
+    [ -x "$comp/install.sh" ] || { echo "!! skipping $comp (not here, or no install.sh)"; continue; }
+    banner "$comp (optional)"
+    if ! ( cd "$comp" && ./install.sh ); then
+        echo "!! $comp not installed (see above; often: sudo apt full-upgrade first)"
+        continue
+    fi
+    if [ -x "$comp/setup-auto-reapply.sh" ]; then
+        ( cd "$comp" && ./setup-auto-reapply.sh )
     fi
 done
 

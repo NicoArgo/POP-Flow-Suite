@@ -222,8 +222,12 @@ rolar. O papel de parede não se mexe (é outra camada, cosmic-bg).
 
 A tela de Task-View (tecla Super). Fork criado 2026-07-20.
 
-### 🚧 Em andamento — portar melhorias do launcher
-- **Botão X de fechar** por miniatura de janela (reusa o padrão do launcher).
+### ✅ Feito, falta instalar — **X ao passar o mouse** (`4524bb8`)
+Instalável (`install.sh`, auto-reapply) desde `0b35b92`; exige COSMIC
+atualizado (`sudo apt full-upgrade`) — o instalador recusa versão diferente.
+
+### 📋 Depois — portar mais melhorias do launcher
+- ~~**Botão X de fechar** por miniatura de janela~~ feito acima.
 - Depois: grade adaptativa / preview no hover, conforme fizer sentido aqui.
 _Explorando onde as miniaturas de janela e o fechamento (toplevel-management)
 são feitos._
@@ -569,6 +573,15 @@ de APT — um update de pacote não tem o que reverter.
 - Um tema por monitor quando os papéis de parede diferem.
 - Levar o destaque ao terminal: hoje a cor por pasta do `cosmic-term` sobrepõe
   o destaque na faixa do topo.
+
+---
+
+## Histórico da área de transferência — `cosmic-clipboard-history/` (`NicoArgo/cosmic-clipboard-history`, privado)
+
+### ✅ Feito — **Super+V** (06/10, `b9d8178`)
+Serviço de usuário grava cópias de texto via `ext-data-control`; plugin do
+pop-launcher (`cb `) lista, filtra e devolve. Sem sudo. Detalhes e o resto da
+rodada em [PLAN-acao-2026-10.md](PLAN-acao-2026-10.md) ("Rodada 2").
 
 ---
 
