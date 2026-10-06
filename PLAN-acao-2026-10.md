@@ -110,7 +110,7 @@ Ordem = ganho no dia a dia ÷ esforço.
 | Alt+Tab: regras de tamanho (mín. 120×70, máx. 264×156, paginação "+N") | cosmic-launcher | `f862776` | `cosmic-launcher/install.sh` |
 | Alt+Tab: peek 1,2× na janela em foco | cosmic-launcher | `f7adf38` | idem |
 | Overview: X ao passar o mouse em cada janela | cosmic-workspaces-epoch | `4524bb8`, `0b35b92` | **antes**: `sudo apt full-upgrade` (o pacote instalado é 0.1.0, o fork é 1.0.12; o instalador recusa) |
-| Histórico da área de transferência (Super+V) | cosmic-clipboard-history (novo, privado) | `b9d8178` | `cosmic-clipboard-history/install.sh` (sem sudo) + atalho Super+V |
+| Histórico da área de transferência (Super+V) | cosmic-clipboard-history (novo) | `b9d8178` | `cosmic-clipboard-history/install.sh` (sem sudo) + atalho Super+V |
 
 Histórico da área de transferência: um serviço de usuário grava o que é
 copiado (só texto, 200 itens, ignora senhas marcadas por gerenciadores) e um

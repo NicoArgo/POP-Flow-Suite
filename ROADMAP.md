@@ -591,7 +591,7 @@ upgrade, rebasear o fork.
 
 ---
 
-## Histórico da área de transferência — `cosmic-clipboard-history/` (`NicoArgo/cosmic-clipboard-history`, privado)
+## Histórico da área de transferência — `cosmic-clipboard-history/` (`NicoArgo/cosmic-clipboard-history`)
 
 ### ✅ Feito — **Super+V** (06/10, `b9d8178`)
 Serviço de usuário grava cópias de texto via `ext-data-control`; plugin do
