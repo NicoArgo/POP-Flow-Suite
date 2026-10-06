@@ -33,6 +33,10 @@ REPOS=(
 # them with a note instead of stopping the whole run.
 OPTIONAL_REPOS=(
     "cosmic-workspaces-epoch|https://github.com/NicoArgo/cosmic-workspaces-epoch.git"
+    # Settings → Displays: the "show desktop" scope toggle. Its own install.sh
+    # wants libpipewire-0.3-dev + libclang-dev, which are NOT in BUILD_DEPS on
+    # purpose: that -dev package upgrades the running PipeWire.
+    "cosmic-settings|https://github.com/NicoArgo/cosmic-settings.git"
 )
 # The compositor: installed last, and only after its own "type yes" prompt —
 # a bad build here costs the session, not just one app. Takes effect at the

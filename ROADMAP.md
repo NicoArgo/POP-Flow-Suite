@@ -576,6 +576,21 @@ de APT — um update de pacote não tem o que reverter.
 
 ---
 
+## Mostrar área de trabalho por tela — `cosmic-applets/` + `cosmic-settings/` (`NicoArgo/cosmic-settings`, branch `pop-flow`)
+
+### ✅ Feito, falta instalar (06/10)
+Contextual por padrão: cada tela tem seu triângulo e minimiza/restaura só as
+próprias janelas; Super+D usa a tela da janela em foco; o botão do painel, a
+tela do seu painel (`bdfcbcc4`, `0d767f49`). A escolha "só esta tela / todas"
+fica em `com.popflow.ShowDesktop/v1/per_output` (padrão `true`): botão direito
+no triângulo, `cosmic-applet-show-desktop --scope screen|all`, ou
+**Configurações → Telas → Mostrar área de trabalho** (fork do cosmic-settings
+na base `eb8d0e3` = pacote 1.0.7 instalado, `0e1ae88`). O instalador do
+Settings recusa outra versão do pacote; o apt já oferece 1.9.0 — após um
+upgrade, rebasear o fork.
+
+---
+
 ## Histórico da área de transferência — `cosmic-clipboard-history/` (`NicoArgo/cosmic-clipboard-history`, privado)
 
 ### ✅ Feito — **Super+V** (06/10, `b9d8178`)
