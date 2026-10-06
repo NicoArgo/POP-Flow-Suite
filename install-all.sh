@@ -28,6 +28,12 @@ REPOS=(
     "cosmic-applets|https://github.com/NicoArgo/cosmic-applets.git"
     "cosmic-term|https://github.com/NicoArgo/cosmic-term.git"
 )
+# The compositor: installed last, and only after its own "type yes" prompt —
+# a bad build here costs the session, not just one app. Takes effect at the
+# next login; refusing it skips it without failing the rest of the install.
+COMP_REPOS=(
+    "cosmic-comp|https://github.com/NicoArgo/cosmic-comp.git"
+)
 # Installed per user (no system binary replaced, so no sudo and no APT hook).
 USER_REPOS=(
     "cosmic-wallsync|https://github.com/NicoArgo/cosmic-wallsync.git"
@@ -117,7 +123,7 @@ fetch() {
     fi
 }
 say "Components"
-for entry in "${REPOS[@]}" "${USER_REPOS[@]}"; do
+for entry in "${REPOS[@]}" "${COMP_REPOS[@]}" "${USER_REPOS[@]}"; do
     fetch "${entry%%|*}" "${entry#*|}" || true
 done
 
@@ -139,7 +145,28 @@ for entry in "${REPOS[@]}"; do
     fi
 done
 
-# --- 6. User components ---------------------------------------------------------
+# --- 6. Compositor --------------------------------------------------------------
+comp_installed=0
+for entry in "${COMP_REPOS[@]}"; do
+    comp=${entry%%|*}
+    if [ ! -x "$comp/install.sh" ]; then
+        echo "!! skipping $comp (not here, or no install.sh)"
+        continue
+    fi
+    banner "$comp (compositor — read the prompt)"
+    if ! ( cd "$comp" && ./install.sh ); then
+        echo "!! $comp not installed — the rest of POP Flow is unaffected"
+        continue
+    fi
+    comp_installed=1
+    if [ -x "$comp/setup-auto-reapply.sh" ]; then
+        ( cd "$comp" && ./setup-auto-reapply.sh )
+    else
+        echo "!! $comp has no setup-auto-reapply.sh — a package update will revert it"
+    fi
+done
+
+# --- 7. User components ---------------------------------------------------------
 for entry in "${USER_REPOS[@]}"; do
     comp=${entry%%|*}
     [ -x "$comp/install.sh" ] || continue
@@ -147,7 +174,7 @@ for entry in "${USER_REPOS[@]}"; do
     ( cd "$comp" && ./install.sh )
 done
 
-# --- 7. Reload ----------------------------------------------------------------
+# --- 8. Reload ----------------------------------------------------------------
 # - cosmic-launcher and the desktop icons were restarted by their installers
 #   (COSMIC respawns them; no app window is closed).
 # - cosmic-files windows are NOT session-managed, so we stop them here to drop
@@ -168,3 +195,11 @@ cat <<'EOF'
       still runs the old binary) and create a rule for a folder; the file
       manager then shows that folder in the rule's color.
 EOF
+if [ "$comp_installed" = 1 ]; then
+    cat <<EOF
+
+    Three-finger touchpad gestures come with the new compositor, which starts
+    at your NEXT LOGIN: log out and back in. If the session doesn't come back:
+      Ctrl+Alt+F3 -> log in -> cd $(pwd)/cosmic-comp -> ./uninstall.sh -> reboot
+EOF
+fi

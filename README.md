@@ -84,7 +84,11 @@ O script:
    houver nenhum);
 3. **clona os componentes** que ainda não estão na pasta — cada um mora no seu
    repo (tabela acima); os que já estão são usados como estão;
-4. compila e instala cada um.
+4. compila e instala cada um;
+5. por último, o **compositor** (gestos de três dedos) — só se você digitar
+   `yes` na pergunta dele. Recusar pula só ele. Ele entra no **próximo login**;
+   se a sessão não voltar: Ctrl+Alt+F3 → `cd …/cosmic-comp` → `./uninstall.sh`
+   → reiniciar.
 
 Ao final: o **launcher** (Alt+Tab) e o **triângulo** do canto inferior direito já
 funcionam; o **gerenciador de arquivos** é reiniciado (isso fecha as janelas
