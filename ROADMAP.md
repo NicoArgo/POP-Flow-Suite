@@ -235,10 +235,14 @@ são feitos._
 ⚠ **É o compositor** — mudanças aqui, se quebrarem, derrubam a sessão; testar
 exige reiniciar o compositor/sessão. Mudanças cirúrgicas e muito cuidado.
 
-### 🚧 Em andamento — **snap de bordas (Aero-snap)**
-Arrastar a janela para uma borda/canto da tela → encaixar em metade/quarto/
-maximizar. _Explorando onde o move-grab e a geometria de janela vivem, e o
-risco/forma de testar._
+### ✅ Fechado sem código — **snap de bordas (Aero-snap)** (06/10)
+Já é nativo: arrastar uma janela flutuante para a borda/canto encaixa em
+metade/quarto/maximiza (`SnappingZone` em `shell/grabs/moving.rs`, desde
+`a4f30063`, 2024). O COSMIC instalado já tem.
+
+### 🔧 Feito, falta instalar — **G3: gestos de três dedos** (`30bc899b`)
+No `install-all.sh` desde `4b0b44a` (opcional, último, pede `yes`). Ver
+[PLAN-acao-2026-10.md](PLAN-acao-2026-10.md) P1.
 
 ---
 
@@ -359,14 +363,25 @@ no painel passam a usar o applet sem reconfigurar.
   `~/.local/share/applications` têm prioridade e mantinham o botão velho. O
   `install.sh` agora as move para `~/.local/state/pop-flow/old-desktop-entries`.
 
-### 📋 Planejado — gestos de touchpad (G3+)
-Depende de resolver o `cosmic-comp` antes (HEAD destacado + base de fevereiro).
-3 dedos ←→ trocar janela, ↑ overview, ↓ área de trabalho; pinch 4–5 App Library.
+### ✅ Feito — **canto por hover** (06/10)
+Repousar o ponteiro 600 ms no triângulo mostra a área de trabalho; uma vez por
+visita, o clique continua valendo.
+
+### ✅ Feito — **modo vampiro × modo dormir** (06/10)
+`cosmic-applet-vampire`: morcego = só dorme quando você manda (inibe a tampa no
+logind e zera a suspensão por inatividade do `cosmic-idle`, guardando os valores
+antigos); lua = dorme normalmente. Detalhes em
+[PLAN-acao-2026-10.md](PLAN-acao-2026-10.md).
+
+### ✅ Feito — **Super+D mostra a área de trabalho** (06/10)
+Atalho personalizado do COSMIC para `cosmic-applet-show-desktop --toggle`.
+
+### 🔧 Gestos de touchpad (G3) — no compositor
+Implementados em `cosmic-comp` (`30bc899b`); falta instalar.
 
 ### 💡 Ideias
 - Preview com *live-switch* + clicável (provavelmente via `cosmic-comp`).
 - Re-capturar periodicamente pra miniatura ficar "ao vivo" de verdade.
-- Atalho de teclado para mostrar área de trabalho (sai de graça do G1).
 
 ---
 
