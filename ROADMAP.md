@@ -383,6 +383,17 @@ Atalho personalizado do COSMIC para `cosmic-applet-show-desktop --toggle`.
 ### 🔧 Gestos de touchpad (G3) — no compositor
 Implementados em `cosmic-comp` (`30bc899b`); falta instalar.
 
+### 🔧 Feito, falta instalar — **terminais no painel** (16/10)
+`cosmic-applet-terminals`: um ícone de terminal que **sempre abre um novo**, e
+ao lado **uma bolinha por janela de terminal**, na cor da regra da pasta da aba
+ativa (neutra quando a pasta não tem regra). A cor muda ao vivo no `cd` e na
+troca de aba. Cada bolinha mantém a posição de quando abriu; clique traz a
+janela para frente, **botão direito** abre um menu com *Trazer para frente* e
+*Fechar janela*. Passou de 8, aparece `+N`. A cor vem do cosmic-term (T3), que
+grava um arquivo por janela em `$XDG_RUNTIME_DIR/pop-flow/terminals/`; o applet
+liga arquivo e janela pelo título. Plano em
+[PLAN-applet-terminais.md](PLAN-applet-terminais.md).
+
 ### 💡 Ideias
 - Preview com *live-switch* + clicável (provavelmente via `cosmic-comp`).
 - Re-capturar periodicamente pra miniatura ficar "ao vivo" de verdade.
@@ -506,6 +517,17 @@ A statusline do Claude (`.claude/statusline.sh`, fora do versionamento) perdeu o
 último nome fixo: sem regra, o rótulo é o nome da pasta em maiúsculas — a mesma
 derivação que o terminal usa na aba. Assim a etiqueta é sempre o título da aba,
 e nada mais escreve "POP FLOW" dentro de outro projeto.
+
+### 🔧 Feito, falta instalar — **T3: cada janela diz ao painel a cor que está usando** (16/10)
+Cada janela grava `$XDG_RUNTIME_DIR/pop-flow/terminals/<pid>` (`title=`, `name=`,
+`accent=`) quando o título, a aba ou a regra mudam — é o que o applet de
+terminais do painel lê. Escrita atômica, removida ao sair; arquivo de processo
+morto é limpo pelo applet.
+
+De quebra, **corrigido um bug do T1**: terminal aberto sem `--working-directory`
+nascia com a regra da pasta e a perdia logo em seguida — a releitura da config
+re-resolvia a regra a partir de uma pasta "ainda não lida". Agora o terminal
+nasce sabendo a pasta inicial (a pedida, ou a do processo, que o shell herda).
 
 ### 📋 A validar em uso
 - A decisão do blur (regra vence o alfa do tema) — a única escolha que não deu

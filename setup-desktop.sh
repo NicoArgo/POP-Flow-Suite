@@ -4,7 +4,8 @@
 # The component installers only install; they never rewrite your panel or your
 # shortcuts. This does, once, so a fresh install looks like the author's:
 #
-#   panel, left:   show desktop, Pictures, Downloads   (after what's there)
+#   panel, left:   show desktop, Pictures, Downloads,  (after what's there)
+#                  terminals
 #   panel, right:  vampire mode                         (first in the group)
 #   Super+D        show desktop (this screen, or all — the corner's setting)
 #   Super+V        clipboard history (only if cosmic-clipboard-history is in)
@@ -57,7 +58,8 @@ try:
     added = []
     for applet in ["com.popflow.CosmicAppletShowDesktop",
                    "com.popflow.CosmicAppletPicturesFolder",
-                   "com.popflow.CosmicAppletDownloadsFolder"]:
+                   "com.popflow.CosmicAppletDownloadsFolder",
+                   "com.popflow.CosmicAppletTerminals"]:
         if applet not in left and applet not in right:
             left.append(applet); added.append(applet)
     if "com.popflow.CosmicAppletVampire" not in left + right:
