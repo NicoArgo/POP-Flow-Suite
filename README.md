@@ -43,6 +43,7 @@ hook de bash, instalados na home (sem sudo, e update do sistema não desfaz).
 | Pastas na cor da regra (Files) | O ícone de pasta do tema recolorido, no Arquivos e na área de trabalho |
 | Applet de terminais | `[>_] ● ● ●` no painel, uma bolinha por janela na cor da pasta |
 | X no Alt+Tab | X na miniatura selecionada ou sob o mouse; clique do meio fecha |
+| Triângulo do canto (mostrar área de trabalho por clique ou hover) | Cantos inferiores, por tela: **clicar** na quina esquerda ou **encostar o mouse** na direita mostra a área de trabalho; de novo, devolve as janelas |
 | Botões Imagens/Downloads, mostrar área de trabalho, modo vampiro | Os mesmos, no painel do Zorin |
 | Histórico da área de transferência | Super+V com filtro; escolher já cola |
 | Wallsync | O acento do Zorin mais próximo da cor do papel de parede |
