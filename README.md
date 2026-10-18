@@ -30,6 +30,28 @@ para o dia a dia — sem abandonar a estética e a base do COSMIC.
 
 Veja o estado detalhado e o que vem a seguir em **[ROADMAP.md](ROADMAP.md)**.
 
+## Zorin OS / GNOME — Zorin Flow
+
+As mesmas ideias, para quem usa **Zorin OS 18 (GNOME 46, X11)** em vez do
+COSMIC: [`NicoArgo/zorin-flow`](https://github.com/NicoArgo/zorin-flow).
+Lá nada é fork — é uma extensão do GNOME Shell, uma extensão do Nautilus e um
+hook de bash, instalados na home (sem sudo, e update do sistema não desfaz).
+
+| Ideia do POP Flow | No Zorin Flow |
+|---|---|
+| Identidade por pasta do terminal (`dir_rules`) | Regras por pasta (nome + cor) com `zflow-rule` e *Regra da pasta…* no Arquivos; título, cursor e prompt na cor, mais um **contorno colorido** em volta da janela |
+| Pastas na cor da regra (Files) | O ícone de pasta do tema recolorido, no Arquivos e na área de trabalho |
+| Applet de terminais | `[>_] ● ● ●` no painel, uma bolinha por janela na cor da pasta |
+| X no Alt+Tab | X na miniatura selecionada ou sob o mouse; clique do meio fecha |
+| Botões Imagens/Downloads, mostrar área de trabalho, modo vampiro | Os mesmos, no painel do Zorin |
+| Histórico da área de transferência | Super+V com filtro; escolher já cola |
+| Wallsync | O acento do Zorin mais próximo da cor do papel de parede |
+
+```bash
+git clone https://github.com/NicoArgo/zorin-flow.git ~/zorin-flow
+cd ~/zorin-flow && ./install.sh
+```
+
 ## Filosofia
 
 POP Flow segue princípios claros para se manter sustentável em cima de um
