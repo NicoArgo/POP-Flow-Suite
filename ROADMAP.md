@@ -8,7 +8,7 @@ Estado da suíte por componente. Legenda:
 
 ---
 
-## 🔧 Rodada 21/10 — qualidade de vida (commitado, falta instalar)
+## ✅ Rodada 21/10 — qualidade de vida (instalada em 21/10)
 Plano em [PLAN-qualidade-de-vida-2026-10.md](PLAN-qualidade-de-vida-2026-10.md).
 
 - **Captura vai para o Ctrl+V** — `pop-flow-capture` (cosmic-applets `3bb4a994`):
@@ -55,6 +55,9 @@ Alt+Tab estilo Windows com grade de miniaturas ao vivo. Instalado e em uso.
 - **Agrupamento por app** sobre essa ordem fixa.
 - **Grade adaptativa sem scroll**: expande em colunas/linhas e **encolhe as
   miniaturas** para caber na tela, em vez de rolar.
+- **Regras de tamanho** (`f862776`): miniatura entre 120×70 e 264×156; acima
+  disso pagina com `+N`; detecta escala 1,25.
+- **Peek** (`f7adf38`): a célula em foco cresce 1,2× em 120 ms, com sombra.
 - **Menu de botão-direito enriquecido**: mescla ações do launcher — *Abrir no
   terminal*, *Abrir pasta*, *Copiar caminho* (para resultados com caminho de
   arquivo) — com as opções do pop-launcher.
@@ -95,7 +98,7 @@ devolveu nesta máquina.
 
 ### 💡 Ideias
 - "Abrir no terminal" também para apps/resultados sem caminho (abrir na home).
-- Pré-visualização maior ao focar (peek), como no Files (ver F1).
+- ~~Pré-visualização maior ao focar (peek)~~ feito (`f7adf38`).
 - Ações extras por tipo de janela (mover para workspace, etc.).
 
 ---
@@ -204,8 +207,13 @@ existente mantém o que o diálogo não mostra (opacidade, temas). O item só
 aparece se o `cosmic-term` instalado tiver `--set-rule` — o de fábrica abriria
 uma janela. Commit `c3271ae`.
 
-_Estado: compilado e testado (67 + 57 testes; CLI exercitada numa cópia da
-config). **Falta instalar** os dois e olhar o diálogo._
+_Estado: compilado, testado (67 + 57 testes) e **instalado** (Files e terminal)._
+
+### ✅ Feito — **rodada 2 de 06/10**
+- Cada pasta lembra lista/grade, com botões no cabeçalho (`bd62b04`).
+- *Copiar caminho* sempre visível (`8844e45`), também no desktop.
+- Seletor Abrir/Salvar acompanha as regras de pasta ao vivo (`84d3262`).
+- Cache de ordenação: de 5 ms para 0,6 ms por quadro com 10 mil itens (`3ac4a14`).
 
 ### ✅ Feito e validado — **área de trabalho livre: arrastar para qualquer célula, com scroll** (30/9)
 Cada ícone do desktop tem uma célula própria. Arrastar ícones e soltar no
@@ -251,9 +259,9 @@ rolar. O papel de parede não se mexe (é outra camada, cosmic-bg).
 
 A tela de Task-View (tecla Super). Fork criado 2026-07-20.
 
-### ✅ Feito, falta instalar — **X ao passar o mouse** (`4524bb8`)
-Instalável (`install.sh`, auto-reapply) desde `0b35b92`; exige COSMIC
-atualizado (`sudo apt full-upgrade`) — o instalador recusa versão diferente.
+### ✅ Feito e instalado (21/10) — **X ao passar o mouse** (`4524bb8`)
+`install.sh` com auto-reapply desde `0b35b92`; o instalador recusa versão de
+pacote diferente da do fork (hoje ambas 1.0.12).
 
 ### 📋 Depois — portar mais melhorias do launcher
 - ~~**Botão X de fechar** por miniatura de janela~~ feito acima.
@@ -273,8 +281,10 @@ Já é nativo: arrastar uma janela flutuante para a borda/canto encaixa em
 metade/quarto/maximiza (`SnappingZone` em `shell/grabs/moving.rs`, desde
 `a4f30063`, 2024). O COSMIC instalado já tem.
 
-### 🔧 Feito, falta instalar — **G3: gestos de três dedos** (`30bc899b`)
-No `install-all.sh` desde `4b0b44a` (opcional, último, pede `yes`). Ver
+### ✅ Feito e instalado (21/10) — **G3: gestos de três dedos** (`30bc899b`)
+Fork atualizado para o código do pacote 1.9.0 (merge `f45ae7b8`) e instalado;
+vale a partir do login seguinte. No `install-all.sh` desde `4b0b44a`
+(opcional, último, pede `yes`). Ver
 [PLAN-acao-2026-10.md](PLAN-acao-2026-10.md) P1.
 
 ---
@@ -409,10 +419,20 @@ antigos); lua = dorme normalmente. Detalhes em
 ### ✅ Feito — **Super+D mostra a área de trabalho** (06/10)
 Atalho personalizado do COSMIC para `cosmic-applet-show-desktop --toggle`.
 
-### 🔧 Gestos de touchpad (G3) — no compositor
-Implementados em `cosmic-comp` (`30bc899b`); falta instalar.
+### ✅ Feito — **cantos genéricos** (`c5bd62cc`)
+`cosmic-show-desktop-corner --corner <canto> --dwell-ms N --exec <comando>`:
+qualquer canto, com qualquer ação. O canto superior esquerdo → overview está
+instalado, mas desligado; o inferior esquerdo virou o segundo "mostrar área de
+trabalho" na rodada de 21/10.
 
-### 🔧 Feito, falta instalar — **terminais no painel** (16/10)
+### ✅ Feito — **vampiro temporário** (`e8b7cdaa`, `8d354f6d`)
+Morcego por **1 h / 3 h**, voltando sozinho a lua; aviso "tampa fechada, PC
+acordado".
+
+### ✅ Gestos de touchpad (G3) — no compositor
+Implementados em `cosmic-comp` (`30bc899b`); instalados em 21/10.
+
+### ✅ Feito e instalado — **terminais no painel** (16/10)
 `cosmic-applet-terminals`: um ícone de terminal que **sempre abre um novo**, e
 ao lado **uma bolinha por janela de terminal**, na cor da regra da pasta da aba
 ativa (neutra quando a pasta não tem regra). A cor muda ao vivo no `cd` e na
@@ -520,7 +540,7 @@ o binário mudar — a sonda custa um spawn por instalação, não um por render
 
 _Estado: **T2 completa.** `accent` + `{title}` no modelo, `--resolve-rule`, tema
 por aba ativa, faixa de identidade, campo na UI (pt-BR e en) e o `statusline.sh`
-ligado à regra. **48 testes passando** (eram 38). **Falta instalar e validar em
+ligado à regra. **48 testes passando** (eram 38). Instalado; **falta validar em
 uso** — em especial se a normalização de luminosidade do `with_accent` deixa a
 faixa (hex literal) visivelmente diferente do acento da interface._
 
@@ -547,7 +567,7 @@ A statusline do Claude (`.claude/statusline.sh`, fora do versionamento) perdeu o
 derivação que o terminal usa na aba. Assim a etiqueta é sempre o título da aba,
 e nada mais escreve "POP FLOW" dentro de outro projeto.
 
-### 🔧 Feito, falta instalar — **T3: cada janela diz ao painel a cor que está usando** (16/10)
+### ✅ Feito e instalado — **T3: cada janela diz ao painel a cor que está usando** (16/10)
 Cada janela grava `$XDG_RUNTIME_DIR/pop-flow/terminals/<pid>` (`title=`, `name=`,
 `accent=`) quando o título, a aba ou a regra mudam — é o que o applet de
 terminais do painel lê. Escrita atômica, removida ao sair; arquivo de processo
@@ -629,16 +649,16 @@ de APT — um update de pacote não tem o que reverter.
 
 ## Mostrar área de trabalho por tela — `cosmic-applets/` + `cosmic-settings/` (`NicoArgo/cosmic-settings`, branch `pop-flow`)
 
-### ✅ Feito, falta instalar (06/10)
+### ✅ Feito e instalado (06/10; Configurações em 21/10)
 Contextual por padrão: cada tela tem seu triângulo e minimiza/restaura só as
 próprias janelas; Super+D usa a tela da janela em foco; o botão do painel, a
 tela do seu painel (`bdfcbcc4`, `0d767f49`). A escolha "só esta tela / todas"
 fica em `com.popflow.ShowDesktop/v1/per_output` (padrão `true`): botão direito
 no triângulo, `cosmic-applet-show-desktop --scope screen|all`, ou
 **Configurações → Telas → Mostrar área de trabalho** (fork do cosmic-settings
-na base `eb8d0e3` = pacote 1.0.7 instalado, `0e1ae88`). O instalador do
-Settings recusa outra versão do pacote; o apt já oferece 1.9.0 — após um
-upgrade, rebasear o fork.
+`0e1ae88`, atualizado para o pacote 1.9.0 no merge `6c2eaad` e instalado em
+21/10). O instalador do Settings recusa outra versão do pacote: a cada
+atualização do COSMIC, trazer o código novo para o fork.
 
 ---
 
@@ -648,6 +668,7 @@ upgrade, rebasear o fork.
 Serviço de usuário grava cópias de texto via `ext-data-control`; plugin do
 pop-launcher (`cb `) lista, filtra e devolve. Sem sudo. Detalhes e o resto da
 rodada em [PLAN-acao-2026-10.md](PLAN-acao-2026-10.md) ("Rodada 2").
+CLI: `cosmic-clipboard-history list | copy N | clear | check`.
 
 ---
 

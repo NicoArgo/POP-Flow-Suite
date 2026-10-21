@@ -13,7 +13,9 @@
 #                  a custom shortcut still calling the missing gnome-screenshot
 #                  is pointed at it too
 #
-# Safe to run again: anything already present is left alone, and a shortcut
+# Safe to run again: anything already present is left alone, a panel button
+# this script added before and you took out stays out (it remembers what it
+# added, in ~/.local/state/pop-flow/panel-added), and a shortcut
 # key that is already bound to something else is skipped, not taken over.
 # Every file it changes is backed up first under ~/.local/state/pop-flow/.
 # Undo: copy the backup back over the file (paths are printed).
@@ -27,12 +29,15 @@ if command -v cosmic-clipboard-history >/dev/null || [ -x "$HOME/.local/bin/cosm
     have_clipboard=1
 fi
 
-COSMIC="$COSMIC" BACKUP="$BACKUP" HAVE_CLIPBOARD="$have_clipboard" python3 - <<'PYEOF'
+PANEL_ADDED="${XDG_STATE_HOME:-$HOME/.local/state}/pop-flow/panel-added"
+
+COSMIC="$COSMIC" BACKUP="$BACKUP" HAVE_CLIPBOARD="$have_clipboard" PANEL_ADDED="$PANEL_ADDED" python3 - <<'PYEOF'
 import os, re, shutil
 
 cosmic = os.environ["COSMIC"]
 backup = os.environ["BACKUP"]
 have_clipboard = os.environ["HAVE_CLIPBOARD"] == "1"
+panel_added = os.environ["PANEL_ADDED"]
 
 def save_backup(path):
     if os.path.exists(path):
@@ -58,16 +63,28 @@ try:
     if text.strip().startswith("None") or len(lists) < 2:
         raise ValueError("no panel wings configured")
     left, right = ([re.findall(r'"([^"]+)"', l) for l in lists[:2]])
+    # A button this script put in once and that is gone now was taken out on
+    # purpose: putting it back on every run would undo the user's choice.
+    try:
+        added_before = set(open(panel_added, encoding="utf-8").read().split())
+    except FileNotFoundError:
+        added_before = set()
+    wanted = lambda applet: applet not in left + right and applet not in added_before
     added = []
     for applet in ["com.popflow.CosmicAppletShowDesktop",
                    "com.popflow.CosmicAppletPicturesFolder",
                    "com.popflow.CosmicAppletDownloadsFolder",
                    "com.popflow.CosmicAppletTerminals"]:
-        if applet not in left and applet not in right:
+        if wanted(applet):
             left.append(applet); added.append(applet)
-    if "com.popflow.CosmicAppletVampire" not in left + right:
+    if wanted("com.popflow.CosmicAppletVampire"):
         right.insert(0, "com.popflow.CosmicAppletVampire")
         added.append("com.popflow.CosmicAppletVampire")
+    # Remember what is on the panel now too, so a button the user later removes
+    # is not brought back either.
+    present = {a for a in left + right if a.startswith("com.popflow.")}
+    if not present <= added_before:
+        write(panel_added, "".join(f"{a}\n" for a in sorted(added_before | present)))
     if added:
         save_backup(wings)
         fmt = lambda xs: "".join(f'    "{x}",\n' for x in xs)
