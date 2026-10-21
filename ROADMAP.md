@@ -8,6 +8,35 @@ Estado da suíte por componente. Legenda:
 
 ---
 
+## 🔧 Rodada 21/10 — qualidade de vida (commitado, falta instalar)
+Plano em [PLAN-qualidade-de-vida-2026-10.md](PLAN-qualidade-de-vida-2026-10.md).
+
+- **Captura vai para o Ctrl+V** — `pop-flow-capture` (cosmic-applets `3bb4a994`):
+  salva em `~/Imagens/Screenshots` **e** copia a imagem (`wl-copy`), notificação
+  com "Mostrar na pasta". `setup-desktop.sh` aponta Print e o Ctrl+Shift+P
+  quebrado (`gnome-screenshot` não instalado) para ele. Precisa de
+  `wl-clipboard` — sem ele o Claude Code também não cola imagem.
+- **Canto inferior esquerdo** também mostra a área de trabalho
+  (`cosmic-show-desktop-corner-left.service`), e **os dois cantos funcionam
+  arrastando um item** (escuta `wl_data_device`; nunca aceita o drop) — `3bb4a994`.
+- **Files** (`dc84f4b`):
+  - *Abrir no terminal* para qualquer seleção que dá numa pasta só: pasta → ela;
+    arquivo → a pasta dele; **executável → raiz do repositório git**; atalho
+    `.desktop` → `Path=` ou o repo do programa (`src/terminal_dir.rs`, 8 testes).
+    Vale na área de trabalho, em Recentes/busca e na **barra de caminho**
+    (também no seletor Abrir/Salvar).
+  - **Seta ▾ para recolher** a pasta aberta na barra lateral (o slot de "fechar"
+    do `nav_bar`); enquanto há pasta aberta, *Ejetar* vai para o menu do drive.
+  - **Rolagem ao arrastar até a borda**, contínua mesmo com o mouse parado,
+    mais rápida no fundo da faixa e com o tempo (teste da curva). O desktop usa
+    o mesmo timer.
+- **Dock**: *Abrir no terminal* para apps com repositório próprio ou `Path=`
+  (cosmic-applets `ffb3dcaf`).
+- **Launcher**: executável abre o terminal na raiz do repo (`88f29db`).
+- **Terminal**: *Nova aba na raiz do repositório* no botão direito (`371dc68`).
+
+---
+
 ## Launcher — `cosmic-launcher/` (`NicoArgo/POP-Flow`)
 
 Alt+Tab estilo Windows com grade de miniaturas ao vivo. Instalado e em uso.

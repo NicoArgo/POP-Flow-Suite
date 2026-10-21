@@ -9,6 +9,9 @@
 #   panel, right:  vampire mode                         (first in the group)
 #   Super+D        show desktop (this screen, or all — the corner's setting)
 #   Super+V        clipboard history (only if cosmic-clipboard-history is in)
+#   Print          pop-flow-capture: saved AND on the clipboard (if installed);
+#                  a custom shortcut still calling the missing gnome-screenshot
+#                  is pointed at it too
 #
 # Safe to run again: anything already present is left alone, and a shortcut
 # key that is already bound to something else is skipped, not taken over.
@@ -108,4 +111,27 @@ if entries:
         body += ","
     save_backup(custom)
     write(custom, body + "\n" + entries + "}\n")
+
+# --- screenshots ---------------------------------------------------------------
+capture = shutil.which("pop-flow-capture")
+if capture:
+    actions = os.path.join(cosmic, "com.system76.CosmicSettings.Shortcuts/v1/system_actions")
+    text = open(actions, encoding="utf-8").read() if os.path.exists(actions) else "{\n}"
+    if re.search(r"^\s*Screenshot\s*:", text, re.M):
+        print("    Print: already set (" + re.search(r'Screenshot\s*:\s*"([^"]*)"', text).group(1) + ")")
+    else:
+        body = text.rstrip()[:-1].rstrip()
+        if body != "{" and not body.endswith(","):
+            body += ","
+        save_backup(actions)
+        write(actions, body + f'\n    Screenshot: "{capture}",\n}}\n')
+        print("    Print: screenshot saved and copied")
+    # gnome-screenshot isn't part of COSMIC; a shortcut left calling it does nothing.
+    text = open(custom, encoding="utf-8").read() if os.path.exists(custom) else ""
+    if 'Spawn("gnome-screenshot' in text and not shutil.which("gnome-screenshot"):
+        save_backup(custom)
+        write(custom, re.sub(r'Spawn\("gnome-screenshot[^"]*"\)', f'Spawn("{capture}")', text))
+        print("    gnome-screenshot shortcut -> pop-flow-capture")
+else:
+    print("    Print: pop-flow-capture not installed (cosmic-applets/install.sh); left alone")
 PYEOF
