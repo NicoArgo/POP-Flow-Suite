@@ -17,7 +17,7 @@ cd "$(dirname "$0")"
 
 # The COSMIC release these forks are built and tested against. They replace
 # system binaries, so a very different COSMIC may not like them.
-TESTED_COSMIC="1.0.7"
+TESTED_COSMIC="1.9.0"
 # Oldest Rust the components build with (their `rust-version`).
 MIN_RUST="1.93"
 
