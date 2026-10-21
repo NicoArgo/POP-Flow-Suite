@@ -15,13 +15,13 @@ nos pacotes do COSMIC, serviços systemd, `~/.config/cosmic` contra
 
 **Placar.** São 9 componentes: 7 forks do COSMIC e 2 projetos próprios.
 - **Commits próprios:** cerca de 125, sem contar os de hoje.
-- **Trabalho fora de commit:** nenhum. Todas as árvores estão limpas e sem stash, e tudo foi enviado ao GitHub (exceto a rodada de hoje).
-- **Binários de fábrica substituídos:** 5 (`cosmic-files`, `cosmic-files-applet`, `cosmic-launcher`, `cosmic-term`, `cosmic-app-list`), cada um com uma cópia "golden" e um hook do APT que reaplica a versão do POP Flow depois de cada atualização.
+- **Trabalho fora de commit:** nenhum. Todas as árvores estão limpas e sem stash, e tudo foi enviado ao GitHub, inclusive a rodada de hoje.
+- **Binários de fábrica substituídos:** 8 (`cosmic-files`, `cosmic-files-applet`, `cosmic-launcher`, `cosmic-term`, `cosmic-app-list`, `cosmic-comp`, `cosmic-workspaces`, `cosmic-settings`), cada um com uma cópia "golden" e um hook do APT que reaplica a versão do POP Flow depois de cada atualização. Todos conferidos com `cmp` contra o build em 21/10.
 - **Binários próprios:** 6 em `/usr/local/bin` e 2 em `~/.local/bin`.
 
 ---
 
-## 0. Rodada de hoje (21/10) — 🔧 tudo commitado, falta instalar
+## 0. Rodada de hoje (21/10) — ✅ instalada e enviada ao GitHub
 
 | O quê | Onde | Commit |
 |---|---|---|
@@ -42,6 +42,13 @@ nos pacotes do COSMIC, serviços systemd, `~/.config/cosmic` contra
 - launcher: 1.
 
 Todas as suítes passam: Files 78, terminal 59, canto 19.
+
+**Instalação completa (21/10, noite).** Tudo instalado e conferido byte a byte:
+- Files, desktop, launcher, terminal, dock e os dois cantos (serviços ativos);
+- `pop-flow-capture` ligado à tecla **Print** e ao Ctrl+Shift+P;
+- compositor, overview e Configurações (seções 5–7), depois de trazer para cada fork o código exato do pacote 1.9.0 instalado.
+
+⚠ O **compositor novo só vale a partir do próximo login**: a sessão atual ainda roda o antigo, já carregado na memória. Se o login não voltar: Ctrl+Alt+F3 → `cosmic-comp/uninstall.sh` (restaura `cosmic-comp.orig`).
 
 ---
 
@@ -143,22 +150,22 @@ Todas as suítes passam: Files 78, terminal 59, canto 19.
 - 🔧 **Vazamento no `cosmic-applet-minimize`** (`fb72bf7b`): commitado, mas **não roda**. O minimize vem do binário multiplexado de fábrica, que o fork não troca.
 - Instalação: auto-reapply (`72ccce88`), uninstall de verdade (`5c785038`), `.desktop` velhos da home movidos (`679335fc`).
 
-## 5. Compositor — `cosmic-comp` 🔧
+## 5. Compositor — `cosmic-comp` ✅ (vale no próximo login)
 
 - **G3 — gestos de três dedos**: ←→ troca de janela, ↑ overview, ↓ área de trabalho. Commit `30bc899b`.
 - Base G0 com scripts que nunca reiniciam o compositor. Commits `a258a397`, `a3ab0649`.
-- ⚠ **Não instale como está.** O fork parte do upstream de 30/07, e o pacote instalado (1.9.0, de 22/09) é mais novo. Precisa de rebase antes.
+- Atualizado para o código do pacote instalado (`0fbd457`, COSMIC 1.9.0) com o merge `f45ae7b8`, sem conflito. Instalado em 21/10 com backup `cosmic-comp.orig` e auto-reapply.
 
-## 6. Overview do Super — `cosmic-workspaces-epoch` 🔧
+## 6. Overview do Super — `cosmic-workspaces-epoch` ✅
 
 - **X para fechar cada janela** no overview, ao passar o mouse. Commit `4524bb8`.
 - Install/reapply com checagem de versão. Commit `0b35b92`.
-- O pacote agora é 1.0.12, igual à versão do fork: **o bloqueio do ROADMAP caiu, dá para instalar.**
+- O pacote é 1.0.12, igual à versão do fork. Instalado em 21/10, com auto-reapply.
 
-## 7. Configurações — `cosmic-settings` (branch `pop-flow`) 🔧
+## 7. Configurações — `cosmic-settings` (branch `pop-flow`) ✅
 
 - **Telas → "Mostrar área de trabalho"**, chave "só esta tela / todas". Commit `0e1ae88`.
-- A base é a 1.0.7, 177 commits atrás. O instalador recusa até haver rebase para a 1.9.0.
+- Atualizado para a 1.9.0 (`7421ff0`) com o merge `6c2eaad`; o único conflito, em `pages/display/mod.rs`, manteve as mensagens do POP Flow e a nova do upstream. Instalado em 21/10, com auto-reapply.
 
 ## 8. Tema pelo papel de parede — `cosmic-wallsync` (próprio) ✅
 
@@ -223,11 +230,11 @@ Funcionam, mas não estão em nenhum repo nem no ROADMAP:
   - cantos genéricos;
   - vampiro 1 h / 3 h;
   - CLI do clipboard-history.
-- **O desktop do Files está desatualizado**: `cosmic-files-applet` foi compilado antes dos 4 commits da tarde de 06/10 ("Copiar caminho" no desktop, cache de ordenação). A instalação de hoje resolve.
+- ~~**O desktop do Files está desatualizado**~~: resolvido pela instalação de 21/10.
 - **Versões**:
   - o `cosmic-term` instalado é o fork com base 1.5.0, por cima do pacote 1.9.0;
-  - `install-all.sh` diz `TESTED_COSMIC=1.0.7`;
-  - comp e settings precisam de rebase antes de instalar.
+  - ~~`install-all.sh` diz `TESTED_COSMIC=1.0.7`~~ → agora 1.9.0 (suíte `7119673`);
+  - ~~comp e settings precisam de rebase antes de instalar~~ → atualizados e instalados em 21/10.
 - **Uninstall do launcher** não tem a trava de versão que o do terminal tem: rodado hoje, restauraria um `.orig` 0.1.0 velho.
 - **`setup-desktop.sh` devolve o botão "mostrar área de trabalho" ao painel**, e hoje ele está fora. Se tirar foi de propósito, não rode o script inteiro.
 - Os binários `cosmic-launcher-baseline-7c5140f` e `cosmic-launcher-system-backup` na pasta da suíte são sobras de julho e podem ir para a lixeira.
