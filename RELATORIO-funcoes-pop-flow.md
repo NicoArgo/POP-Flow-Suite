@@ -224,7 +224,7 @@ Funcionam, mas não estão em nenhum repo nem no ROADMAP:
 
 ## 12. Divergências e riscos encontrados
 
-- **O ROADMAP marca como "falta instalar" coisas já instaladas**: applet de terminais, T3 do terminal, "Regra da pasta...", show-desktop por tela no applet. Não constam nele:
+- ✅ *Resolvido em 21/10 (suíte `a7981fb`): status corrigidos e itens incluídos.* ~~**O ROADMAP marca como "falta instalar" coisas já instaladas**~~: applet de terminais, T3 do terminal, "Regra da pasta...", show-desktop por tela no applet. Não constam nele:
   - peek e regras de grade do launcher;
   - rodada 2 de 06/10 do Files;
   - cantos genéricos;
@@ -232,12 +232,12 @@ Funcionam, mas não estão em nenhum repo nem no ROADMAP:
   - CLI do clipboard-history.
 - ~~**O desktop do Files está desatualizado**~~: resolvido pela instalação de 21/10.
 - **Versões**:
-  - o `cosmic-term` instalado é o fork com base 1.5.0, por cima do pacote 1.9.0;
+  - ~~o `cosmic-term` instalado é o fork com base 1.5.0, por cima do pacote 1.9.0~~ → fork atualizado para a 1.9.0 (merge `2aac578`, 59 testes passando); **falta rodar `cosmic-term/install.sh`**;
   - ~~`install-all.sh` diz `TESTED_COSMIC=1.0.7`~~ → agora 1.9.0 (suíte `7119673`);
   - ~~comp e settings precisam de rebase antes de instalar~~ → atualizados e instalados em 21/10.
-- **Uninstall do launcher** não tem a trava de versão que o do terminal tem: rodado hoje, restauraria um `.orig` 0.1.0 velho.
-- **`setup-desktop.sh` devolve o botão "mostrar área de trabalho" ao painel**, e hoje ele está fora. Se tirar foi de propósito, não rode o script inteiro.
-- Os binários `cosmic-launcher-baseline-7c5140f` e `cosmic-launcher-system-backup` na pasta da suíte são sobras de julho e podem ir para a lixeira.
+- ✅ ~~**Uninstall do launcher** sem trava de versão~~ → agora compara o backup com o checksum que o dpkg registrou e recusa um backup velho (launcher `15373b8`). O do Files tinha o mesmo problema e ganhou a mesma trava (`17725e7`).
+- ✅ ~~**`setup-desktop.sh` devolve o botão "mostrar área de trabalho" ao painel**~~ → foi o que aconteceu na instalação das 18:45; o painel voltou ao estado anterior e o script agora lembra os botões que já colocou (`~/.local/state/pop-flow/panel-added`) e não recoloca um que você tirou (suíte `a7981fb`).
+- Os binários `cosmic-launcher-baseline-7c5140f` e `cosmic-launcher-system-backup` na pasta da suíte são sobras de julho e podem ir para a lixeira (pendente: a limpeza precisa da sua confirmação).
 
 ---
 
