@@ -25,3 +25,7 @@ cosmic-launcher-system-backup
 
 # Scratch backups from an in-progress upstream merge — never part of the suite.
 .sync-wip/
+
+# Copies of this machine's system tweaks and COSMIC config (personal paths,
+# folder rules): kept next to the suite, never published with it.
+ajustes-do-sistema/

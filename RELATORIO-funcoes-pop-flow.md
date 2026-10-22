@@ -191,7 +191,10 @@ Todas as suítes passam: Files 78, terminal 59, canto 19.
 
 ## 11. Ajustes de desktop fora dos repos do POP Flow (achados na varredura)
 
-Funcionam, mas não estão em nenhum repo nem no ROADMAP:
+Funcionam, mas não estão em nenhum repo nem no ROADMAP. Desde 21/10 há uma cópia de
+todos eles em `Pop Flow/ajustes-do-sistema/` (`capturar.sh` atualiza; o README diz
+como reaplicar). A pasta fica fora do repo público da suíte.
+
 
 1. **Watchdog do Wi-Fi MT7921**: `/usr/local/sbin/wifi-watchdog` + serviço, `disable_aspm=Y` no modprobe e powersave desligado no NetworkManager. ✅ ativo.
 2. **Tela de boot "nico"**:
