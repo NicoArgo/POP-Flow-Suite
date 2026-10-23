@@ -28,6 +28,7 @@ para o dia a dia — sem abandonar a estética e a base do COSMIC.
 | **Configurações** (`cosmic-settings/`) — opcional | [`NicoArgo/cosmic-settings`](https://github.com/NicoArgo/cosmic-settings) (branch `pop-flow`) | *Telas → Mostrar área de trabalho*: só a tela onde foi acionado / todas. Precisa de `libpipewire-0.3-dev` e `libclang-dev` para compilar |
 | **Compositor** (`cosmic-comp/`) — opcional | [`NicoArgo/cosmic-comp`](https://github.com/NicoArgo/cosmic-comp) | Gestos de três dedos. ⚠ É o compositor: pede `yes`, vale no próximo login |
 | **Tela de boot** (`cosmic-bootsplash/`) — opcional, padrão não | [`NicoArgo/cosmic-bootsplash`](https://github.com/NicoArgo/cosmic-bootsplash) | Uma imagem só (o papel de parede, outra foto ou um logo) do ligar até o login, sem o logo do fabricante voltando. Mexe no Plymouth e nas opções do kernel; `uninstall.sh` desfaz |
+| **fastfetch** (`cosmic-fastfetch/`) — opcional, padrão não | [`NicoArgo/cosmic-fastfetch`](https://github.com/NicoArgo/cosmic-fastfetch) | Resumo do sistema ao abrir o terminal, com o logo da distro ou uma imagem sua **desenhada com letras**, na proporção certa da fonte do cosmic-term. Instala o fastfetch (fora do APT no 24.04); `uninstall.sh` desfaz |
 
 Veja o estado detalhado e o que vem a seguir em **[ROADMAP.md](ROADMAP.md)**.
 
@@ -122,6 +123,9 @@ O script:
 6. a **tela de boot**, só se você responder `y`. A resposta padrão é não, e
    `POP_FLOW_BOOTSPLASH=1` instala sem perguntar. Usa o papel de parede; para
    outra imagem ou um logo, veja o README do `cosmic-bootsplash`.
+7. o **fastfetch** nos terminais novos, só se você responder `y`. A resposta
+   padrão é não, e `POP_FLOW_FASTFETCH=1` instala sem perguntar. Usa o logo da
+   distro; para um logo seu, veja o README do `cosmic-fastfetch`.
 
 Ao final: o **launcher** (Alt+Tab) e o **triângulo** do canto inferior direito já
 funcionam; o **gerenciador de arquivos** é reiniciado (isso fecha as janelas

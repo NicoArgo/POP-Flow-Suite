@@ -684,6 +684,19 @@ O `uninstall.sh` tira só as opções do kernel que ele mesmo adicionou.
 
 ---
 
+## fastfetch — `cosmic-fastfetch/` (`NicoArgo/cosmic-fastfetch`)
+
+### ✅ Feito (23/10) — **resumo do sistema nos terminais novos** (opcional)
+Instala o fastfetch (do APT, ou o .deb das releases quando o APT não tem, como
+no 24.04), escreve a config e põe um bloco marcado no `~/.bashrc`. Com
+`--logo`, desenha a imagem com letras: cada célula recebe o caractere cuja
+forma, na fonte do cosmic-term, mais se parece com aquele pedaço; a proporção
+da célula sai de `ceil(1,4 × tamanho)` e da largura da fonte. Opções `--fill`,
+`--crop`, `--circle`, `--invert`, `--by-light`, `--overlay`. No
+`install-all.sh`, a resposta padrão é não.
+
+---
+
 ## Referências (não modificadas)
 
 - (nenhuma no momento — os clones de referência viraram componentes ativos.)
