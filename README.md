@@ -27,6 +27,7 @@ para o dia a dia — sem abandonar a estética e a base do COSMIC.
 | **Overview** (`cosmic-workspaces-epoch/`) — opcional | [`NicoArgo/cosmic-workspaces-epoch`](https://github.com/NicoArgo/cosmic-workspaces-epoch) | X ao passar o mouse em cada janela da tela do Super. Exige COSMIC atualizado (o instalador confere) |
 | **Configurações** (`cosmic-settings/`) — opcional | [`NicoArgo/cosmic-settings`](https://github.com/NicoArgo/cosmic-settings) (branch `pop-flow`) | *Telas → Mostrar área de trabalho*: só a tela onde foi acionado / todas. Precisa de `libpipewire-0.3-dev` e `libclang-dev` para compilar |
 | **Compositor** (`cosmic-comp/`) — opcional | [`NicoArgo/cosmic-comp`](https://github.com/NicoArgo/cosmic-comp) | Gestos de três dedos. ⚠ É o compositor: pede `yes`, vale no próximo login |
+| **Tela de boot** (`cosmic-bootsplash/`) — opcional, padrão não | [`NicoArgo/cosmic-bootsplash`](https://github.com/NicoArgo/cosmic-bootsplash) | Uma imagem só (o papel de parede, outra foto ou um logo) do ligar até o login, sem o logo do fabricante voltando. Mexe no Plymouth e nas opções do kernel; `uninstall.sh` desfaz |
 
 Veja o estado detalhado e o que vem a seguir em **[ROADMAP.md](ROADMAP.md)**.
 
@@ -118,6 +119,9 @@ O script:
    `yes` na pergunta dele. Recusar pula só ele. Ele entra no **próximo login**;
    se a sessão não voltar: Ctrl+Alt+F3 → `cd …/cosmic-comp` → `./uninstall.sh`
    → reiniciar.
+6. a **tela de boot**, só se você responder `y`. A resposta padrão é não, e
+   `POP_FLOW_BOOTSPLASH=1` instala sem perguntar. Usa o papel de parede; para
+   outra imagem ou um logo, veja o README do `cosmic-bootsplash`.
 
 Ao final: o **launcher** (Alt+Tab) e o **triângulo** do canto inferior direito já
 funcionam; o **gerenciador de arquivos** é reiniciado (isso fecha as janelas

@@ -44,6 +44,12 @@ OPTIONAL_REPOS=(
 COMP_REPOS=(
     "cosmic-comp|https://github.com/NicoArgo/cosmic-comp.git"
 )
+# Boot screen: touches Plymouth, kernel options and the initramfs, so it is
+# off by default — installed only on a "yes" (POP_FLOW_BOOTSPLASH=1 skips the
+# question). Replaces no packaged file, so there is no auto-reapply.
+BOOT_REPOS=(
+    "cosmic-bootsplash|https://github.com/NicoArgo/cosmic-bootsplash.git"
+)
 # Installed per user (no system binary replaced, so no sudo and no APT hook).
 USER_REPOS=(
     "cosmic-wallsync|https://github.com/NicoArgo/cosmic-wallsync.git"
@@ -134,7 +140,7 @@ fetch() {
     fi
 }
 say "Components"
-for entry in "${REPOS[@]}" "${OPTIONAL_REPOS[@]}" "${COMP_REPOS[@]}" "${USER_REPOS[@]}"; do
+for entry in "${REPOS[@]}" "${OPTIONAL_REPOS[@]}" "${COMP_REPOS[@]}" "${BOOT_REPOS[@]}" "${USER_REPOS[@]}"; do
     fetch "${entry%%|*}" "${entry#*|}" || true
 done
 
@@ -188,6 +194,26 @@ for entry in "${COMP_REPOS[@]}"; do
         ( cd "$comp" && ./setup-auto-reapply.sh )
     else
         echo "!! $comp has no setup-auto-reapply.sh — a package update will revert it"
+    fi
+done
+
+# --- 6b. Boot screen (optional, default no) -----------------------------------
+for entry in "${BOOT_REPOS[@]}"; do
+    comp=${entry%%|*}
+    [ -x "$comp/install.sh" ] || { echo "!! skipping $comp (not here, or no install.sh)"; continue; }
+    banner "$comp (optional — boot screen)"
+    answer=${POP_FLOW_BOOTSPLASH:-}
+    if [ "$answer" != 1 ]; then
+        answer=n
+        if [ "${POP_FLOW_YES:-}" != 1 ]; then
+            read -r -p "   Show your wallpaper from power-on to the login screen? [y/N] " answer
+        fi
+    fi
+    if [[ "$answer" =~ ^[1yYsS] ]]; then
+        ( cd "$comp" && ./install.sh ) \
+            || echo "!! $comp not installed — the rest of POP Flow is unaffected"
+    else
+        echo "    skipped; any time: $comp/install.sh (see its README for --image/--logo)"
     fi
 done
 

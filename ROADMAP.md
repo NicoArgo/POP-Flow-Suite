@@ -672,6 +672,18 @@ CLI: `cosmic-clipboard-history list | copy N | clear | check`.
 
 ---
 
+## Tela de boot — `cosmic-bootsplash/` (`NicoArgo/cosmic-bootsplash`)
+
+### ✅ Feito (22/10) — **uma imagem do ligar até o login** (opcional)
+Virou componente a tela de boot que estava só nesta máquina (ver
+`ajustes-do-sistema/boot`). Ela tem três partes: o tema Plymouth `pop-flow`,
+o serviço que pinta o framebuffer por cima do logo do fabricante e as opções
+do kernel via kernelstub. Por padrão usa o papel de parede; aceita
+`--image`/`--logo`/`--black`. No `install-all.sh`, a resposta padrão é não.
+O `uninstall.sh` tira só as opções do kernel que ele mesmo adicionou.
+
+---
+
 ## Referências (não modificadas)
 
 - (nenhuma no momento — os clones de referência viraram componentes ativos.)
