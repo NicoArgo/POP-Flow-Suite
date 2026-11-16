@@ -107,6 +107,12 @@ devolveu nesta máquina.
 
 Gerenciador de arquivos do COSMIC. Fork recém-criado, pronto para trabalho.
 
+### ✅ Feito (16/11) — **ícone próprio por pasta**
+`folder_icon` usa a imagem de `metadata::custom-icon` (a mesma chave do
+Nautilus: `gio set PASTA metadata::custom-icon file:///…png`) quando ela
+existe; senão, o ícone de sempre ou o da cor da regra. Vale na janela e na
+área de trabalho. O `cosmic-blackhole` usa isso para o ícone da CAOS.
+
 ### ✅ Feito — **F1: preview maior no hover** (grade + lista)
 Ao passar o mouse sobre o ícone de um arquivo, um tooltip mostra uma versão
 ampliada (~240px) da miniatura — só para imagens/SVGs, reusando o handle já em
@@ -693,6 +699,19 @@ no 24.04), escreve a config e põe um bloco marcado no `~/.bashrc`. Com
 forma, na fonte do cosmic-term, mais se parece com aquele pedaço; a proporção
 da célula sai de `ceil(1,4 × tamanho)` e da largura da fonte. Opções `--fill`,
 `--crop`, `--circle`, `--invert`, `--by-light`, `--overlay`. No
+`install-all.sh`, a resposta padrão é não.
+
+---
+
+## Buraco negro — `cosmic-blackhole/` (`NicoArgo/cosmic-blackhole`)
+
+### ✅ Feito (16/11) — **arquivo solto na área de trabalho vai para a CAOS** (opcional)
+Virou componente o `caos-blackhole` que existia só nesta máquina. Units do
+systemd do usuário: `.path` a cada mudança na área de trabalho e `.timer` a
+cada 2 min. Move só arquivos comuns; pastas, links, `.desktop`, ocultos e
+downloads em andamento ficam. Nome repetido vira `nome (1).ext`. A pasta
+(`--folder`, padrão `CAOS`) ganha o ícone de buraco negro por
+`metadata::custom-icon`, que o cosmic-files do POP Flow agora mostra. No
 `install-all.sh`, a resposta padrão é não.
 
 ---

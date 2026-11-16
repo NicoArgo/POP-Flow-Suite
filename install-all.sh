@@ -56,6 +56,11 @@ BOOT_REPOS=(
 FETCH_REPOS=(
     "cosmic-fastfetch|https://github.com/NicoArgo/cosmic-fastfetch.git"
 )
+# Desktop black hole: moves your files around, so off by default — installed
+# only on a "yes" (POP_FLOW_BLACKHOLE=1 skips the question). Per user, no sudo.
+BLACKHOLE_REPOS=(
+    "cosmic-blackhole|https://github.com/NicoArgo/cosmic-blackhole.git"
+)
 # Installed per user (no system binary replaced, so no sudo and no APT hook).
 USER_REPOS=(
     "cosmic-wallsync|https://github.com/NicoArgo/cosmic-wallsync.git"
@@ -146,7 +151,7 @@ fetch() {
     fi
 }
 say "Components"
-for entry in "${REPOS[@]}" "${OPTIONAL_REPOS[@]}" "${COMP_REPOS[@]}" "${BOOT_REPOS[@]}" "${FETCH_REPOS[@]}" "${USER_REPOS[@]}"; do
+for entry in "${REPOS[@]}" "${OPTIONAL_REPOS[@]}" "${COMP_REPOS[@]}" "${BOOT_REPOS[@]}" "${FETCH_REPOS[@]}" "${BLACKHOLE_REPOS[@]}" "${USER_REPOS[@]}"; do
     fetch "${entry%%|*}" "${entry#*|}" || true
 done
 
@@ -248,6 +253,26 @@ for entry in "${FETCH_REPOS[@]}"; do
             || echo "!! $comp not installed — the rest of POP Flow is unaffected"
     else
         echo "    skipped; any time: $comp/install.sh (see its README for --logo)"
+    fi
+done
+
+# --- 7a2. Desktop black hole (optional, default no) --------------------------
+for entry in "${BLACKHOLE_REPOS[@]}"; do
+    comp=${entry%%|*}
+    [ -x "$comp/install.sh" ] || { echo "!! skipping $comp (not here, or no install.sh)"; continue; }
+    banner "$comp (optional — desktop black hole)"
+    answer=${POP_FLOW_BLACKHOLE:-}
+    if [ "$answer" != 1 ]; then
+        answer=n
+        if [ "${POP_FLOW_YES:-}" != 1 ]; then
+            read -r -p "   Move loose files on the desktop into a CAOS folder automatically? [y/N] " answer
+        fi
+    fi
+    if [[ "$answer" =~ ^[1yYsS] ]]; then
+        ( cd "$comp" && ./install.sh ) \
+            || echo "!! $comp not installed — the rest of POP Flow is unaffected"
+    else
+        echo "    skipped; any time: $comp/install.sh (see its README for --folder)"
     fi
 done
 
